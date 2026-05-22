@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unit tests — validation</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; background: #111; color: #eee; }
+    pre { background: #1a1a1a; padding: 16px; border-radius: 8px; overflow: auto; }
+    .ok { color: #7bed9f; }
+    .fail { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <h1>Браузерные unit-тесты (validation)</h1>
+  <p>Откройте эту страницу через локальный HTTP-сервер (ES modules). Результат ниже.</p>
+  <pre id="out">Running…</pre>
+  <script type="module">
+    import { validateEmail, validatePhoneOptional, validatePersonName, validateRequiredText } from '../js/modules/validation.js';
+
+    function assert(cond, msg) {
+      if (!cond) {
+        throw new Error(msg || 'Assertion failed');
+      }
+    }
+
+    var lines = [];
+    function log(line, ok) {
+      lines.push((ok ? '[PASS] ' : '[FAIL] ') + line);
+    }
+
+    try {
+      assert(validateEmail('user@example.com') === true, 'valid email');
+      log('validateEmail valid', true);
+      assert(validateEmail('bad') === false, 'invalid email');
+      log('validateEmail invalid', true);
+      assert(validatePhoneOptional('') === true, 'empty phone');
+      log('validatePhoneOptional empty', true);
+      assert(validatePhoneOptional('+7 (900) 000-00-00') === true, 'ru phone');
+      log('validatePhoneOptional ru', true);
+      assert(validatePhoneOptional('123') === false, 'short phone invalid');
+      log('validatePhoneOptional short', true);
+      assert(validatePersonName('Иван') === true, 'name');
+      log('validatePersonName', true);
+      assert(validateRequiredText('hello', 10) === true, 'message');
+      log('validateRequiredText', true);
+      document.getElementById('out').textContent = lines.join('\n');
+      document.getElementById('out').className = 'ok';
+    } catch (e) {
+      document.getElementById('out').textContent = lines.join('\n') + '\n\n' + String(e && e.message ? e.message : e);
+      document.getElementById('out').className = 'fail';
+    }
+  </script>
+</body>
+</html>

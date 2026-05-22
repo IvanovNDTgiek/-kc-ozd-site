@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация — Кадровый центр ОЖД</title>
+  <meta name="description" content="Создание учётной записи на демо-сайте. Требуется локальный сервер npm run server.">
+  <meta name="theme-color" content="#e31e24">
+  <meta name="api-base" content="">
+  <link rel="canonical" href="https://example.github.io/kc-ozd-site/register.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page page--register" data-page="register">
+  <a class="skip-link" href="#main">Перейти к основному содержанию</a>
+  <header class="header" role="banner">
+    <div class="header__inner container">
+      <a class="header__logo" href="index.html" aria-label="Кадровый центр ОЖД — на главную">
+        <span class="header__logo-mark" aria-hidden="true"></span>
+        <span class="header__logo-text">КЦ ОЖД</span>
+      </a>
+      <button class="header__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="header__toggle-bar" aria-hidden="true"></span>
+        <span class="visually-hidden">Открыть меню</span>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li class="nav__item"><a class="nav__link" href="index.html">Главная</a></li>
+          <li class="nav__item"><a class="nav__link" href="about.html">О компании</a></li>
+          <li class="nav__item"><a class="nav__link" href="services.html">Услуги</a></li>
+          <li class="nav__item"><a class="nav__link" href="blog.html">Новости</a></li>
+          <li class="nav__item"><a class="nav__link" href="favorites.html">Избранное</a></li>
+          <li class="nav__item" data-auth-nav>
+            <div data-auth-guest>
+              <a class="nav__link" href="login.html">Вход</a><span class="nav__auth-sep" aria-hidden="true"> · </span><a class="nav__link nav__link--active" href="register.html">Регистрация</a>
+            </div>
+            <div class="nav__auth-user" data-auth-user hidden>
+              <span class="nav__auth-name" data-auth-name></span>
+              <button type="button" class="button button--ghost nav__auth-logout" data-auth-logout>Выйти</button>
+            </div>
+          </li>
+          <li class="nav__item"><a class="nav__link" href="contacts.html">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header__actions">
+        <label class="search-field" aria-label="Поиск по сайту">
+          <span class="visually-hidden">Поиск</span>
+          <input class="search-field__input" type="search" name="site-search" placeholder="Поиск…" autocomplete="off" data-site-search>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="main--inner" tabindex="-1">
+    <header class="page-header container">
+      <h1 class="page-header__title">Регистрация</h1>
+      <p class="page-header__lead">Учётная запись хранится в локальной базе SQLite при работе через <code class="inline-code">npm run server</code>. Имя пользователя — <strong>только буквы</strong>, без пробелов и цифр. Пароль: не короче 8 символов, с буквой и цифрой.</p>
+    </header>
+
+    <section class="section container section--tight" aria-labelledby="register-form-heading">
+      <h2 class="visually-hidden" id="register-form-heading">Форма регистрации</h2>
+      <form class="form" id="register-form" novalidate data-register-form>
+        <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+        <div class="form__row">
+          <label class="form__label" for="reg-name">Имя <span aria-hidden="true">*</span></label>
+          <input class="form__input" id="reg-name" name="display_name" type="text" required maxlength="80" autocomplete="username" aria-required="true">
+          <span class="form__error" id="reg-name-error" data-field-error="display_name"></span>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="reg-email">E-mail <span aria-hidden="true">*</span></label>
+          <input class="form__input" id="reg-email" name="email" type="email" required maxlength="254" autocomplete="email" aria-required="true">
+          <span class="form__error" id="reg-email-error" data-field-error="email"></span>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="reg-password">Пароль <span aria-hidden="true">*</span></label>
+          <input class="form__input" id="reg-password" name="password" type="password" required minlength="8" maxlength="128" autocomplete="new-password" aria-required="true">
+          <span class="form__error" id="reg-password-error" data-field-error="password"></span>
+        </div>
+        <div class="form__row">
+          <label class="form__label" for="reg-password2">Повтор пароля <span aria-hidden="true">*</span></label>
+          <input class="form__input" id="reg-password2" name="password_confirm" type="password" required minlength="8" maxlength="128" autocomplete="new-password" aria-required="true">
+          <span class="form__error" id="reg-password2-error" data-field-error="password_confirm"></span>
+        </div>
+        <button class="button button--primary" type="submit">Зарегистрироваться</button>
+        <p class="form__hint">Уже есть аккаунт? <a class="link" href="login.html">Войти</a></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <p class="footer__name">ООО «Кадровый центр ОЖД»</p>
+        <p class="footer__copy">© <span data-current-year></span> КЦ ОЖД. Все права защищены.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Нижнее меню">
+        <a class="footer__link" href="contacts.html">Контакты</a>
+        <a class="footer__link" href="login.html">Вход</a>
+        <button class="footer__link footer__link--button" type="button" data-modal-open="modal-disclosure">Раскрытие информации</button>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal-disclosure" role="dialog" aria-modal="true" aria-labelledby="modal-disclosure-title" hidden data-modal>
+    <div class="modal__backdrop" data-modal-close tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрыть окно"></button>
+      <h2 class="modal__title" id="modal-disclosure-title">Раскрытие информации</h2>
+      <p class="modal__text">Реквизиты и раскрываемая информация размещаются в соответствии с требованиями законодательства РФ. Для получения документов используйте контактную форму.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/script.js"></script>
+  <script defer src="js/analytics.js"></script>
+</body>
+</html>

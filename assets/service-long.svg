@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" role="img" aria-labelledby="t">
+  <title id="t">Длинномерный груз на низкорамном тралле</title>
+  <defs>
+    <linearGradient id="gl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#fde8e8"/>
+      <stop offset="100%" stop-color="#e31e24"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="200" fill="url(#gl)"/>
+  <rect x="20" y="150" width="320" height="14" rx="3" fill="#c62828" opacity="0.2"/>
+  <rect x="40" y="118" width="48" height="28" rx="4" fill="#1a1a1a" opacity="0.85"/>
+  <rect x="88" y="125" width="220" height="14" rx="2" fill="#b71c1c" opacity="0.9"/>
+  <rect x="100" y="108" width="180" height="10" rx="2" fill="#fff5f5" stroke="#e31e24" stroke-width="2"/>
+  <circle cx="70" cy="150" r="14" fill="#333"/>
+  <circle cx="70" cy="150" r="6" fill="#ddd"/>
+  <circle cx="280" cy="150" r="14" fill="#333"/>
+  <circle cx="280" cy="150" r="6" fill="#ddd"/>
+  <circle cx="310" cy="150" r="14" fill="#333"/>
+  <circle cx="310" cy="150" r="6" fill="#ddd"/>
+</svg>

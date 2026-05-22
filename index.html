@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кадровый центр ОЖД — пассажирские и грузовые перевозки</title>
+  <meta name="description" content="ООО «Кадровый центр ОЖД»: логистика, пассажирский и грузовой автотранспорт, надёжные перевозки по Северо-Западу и всей России.">
+  <meta name="keywords" content="перевозки, логистика, ОЖД, грузовой транспорт, пассажирские перевозки">
+  <meta name="theme-color" content="#e31e24">
+  <link rel="canonical" href="https://example.github.io/kc-ozd-site/index.html">
+  <meta property="og:title" content="Кадровый центр ОЖД">
+  <meta property="og:description" content="Качественный сервис в области пассажирских и грузовых перевозок.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page page--home" data-page="home">
+  <a class="skip-link" href="#main">Перейти к основному содержанию</a>
+  <header class="header" role="banner">
+    <div class="header__inner container">
+      <a class="header__logo" href="index.html" aria-label="Кадровый центр ОЖД — на главную">
+        <span class="header__logo-mark" aria-hidden="true"></span>
+        <span class="header__logo-text">КЦ ОЖД</span>
+      </a>
+      <button class="header__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="header__toggle-bar" aria-hidden="true"></span>
+        <span class="visually-hidden">Открыть меню</span>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li class="nav__item"><a class="nav__link nav__link--active" href="index.html">Главная</a></li>
+          <li class="nav__item"><a class="nav__link" href="about.html">О компании</a></li>
+          <li class="nav__item"><a class="nav__link" href="services.html">Услуги</a></li>
+          <li class="nav__item"><a class="nav__link" href="blog.html">Новости</a></li>
+          <li class="nav__item"><a class="nav__link" href="favorites.html">Избранное</a></li>
+          <li class="nav__item" data-auth-nav>
+            <div data-auth-guest>
+              <a class="nav__link" href="login.html">Вход</a><span class="nav__auth-sep" aria-hidden="true"> · </span><a class="nav__link" href="register.html">Регистрация</a>
+            </div>
+            <div class="nav__auth-user" data-auth-user hidden>
+              <span class="nav__auth-name" data-auth-name></span>
+              <button type="button" class="button button--ghost nav__auth-logout" data-auth-logout>Выйти</button>
+            </div>
+          </li>
+          <li class="nav__item"><a class="nav__link" href="contacts.html">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header__actions">
+        <label class="search-field" aria-label="Поиск по сайту">
+          <span class="visually-hidden">Поиск</span>
+          <input class="search-field__input" type="search" name="site-search" placeholder="Поиск…" autocomplete="off" data-site-search>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <p class="hero__eyebrow">Транспорт и логистика</p>
+          <h1 class="hero__title" id="hero-heading">Надёжные перевозки по России</h1>
+          <p class="hero__lead">ООО «Кадровый центр ОЖД» — подрядчик Октябрьской железной дороги: пассажирский и грузовой автотранспорт, полный спектр логистических услуг.</p>
+          <div class="hero__cta">
+            <a class="button button--primary" href="contacts.html">Связаться с нами</a>
+            <button class="button button--ghost" type="button" data-modal-open="modal-services">Наши услуги</button>
+          </div>
+        </div>
+        <div class="hero__media">
+          <img class="hero__image" src="assets/hero-logistics.svg" width="800" height="420" alt="" loading="eager" fetchpriority="high">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="slider-heading">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title" id="slider-heading">Актуальные направления</h2>
+          <p class="section__subtitle">Регионы присутствия и ключевые компетенции</p>
+        </div>
+        <div class="slider" data-slider aria-roledescription="carousel" aria-label="Слайдер направлений" tabindex="0">
+          <div class="slider__viewport">
+            <ul class="slider__track" data-slider-track>
+              <li class="slider__slide" data-slider-slide>
+                <article class="card card--slide">
+                  <h3 class="card__title">Северо-Запад</h3>
+                  <p class="card__text">Регулярные грузовые и пассажирские перевозки, работа с инфраструктурой ОЖД.</p>
+                </article>
+              </li>
+              <li class="slider__slide" data-slider-slide>
+                <article class="card card--slide">
+                  <h3 class="card__title">Московский регион</h3>
+                  <p class="card__text">Межрегиональная логистика и распределение грузов.</p>
+                </article>
+              </li>
+              <li class="slider__slide" data-slider-slide>
+                <article class="card card--slide">
+                  <h3 class="card__title">По всей РФ</h3>
+                  <p class="card__text">Организация перевозок длинномерных, сыпучих и генеральных грузов.</p>
+                </article>
+              </li>
+            </ul>
+          </div>
+          <div class="slider__controls">
+            <button class="slider__btn" type="button" data-slider-prev aria-label="Предыдущий слайд"></button>
+            <div class="slider__dots" data-slider-dots aria-hidden="true"></div>
+            <button class="slider__btn slider__btn--next" type="button" data-slider-next aria-label="Следующий слайд"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" aria-labelledby="features-heading">
+      <div class="container">
+        <h2 class="section__title" id="features-heading">Почему нам доверяют</h2>
+        <ul class="features">
+          <li class="features__item">
+            <h3 class="features__title">Безопасность</h3>
+            <p class="features__text">Соблюдение норм охраны труда и дорожной безопасности.</p>
+          </li>
+          <li class="features__item">
+            <h3 class="features__title">Сроки</h3>
+            <p class="features__text">Планирование маршрутов и контроль исполнения.</p>
+          </li>
+          <li class="features__item">
+            <h3 class="features__title">Клиентоориентированность</h3>
+            <p class="features__text">Персональный подход и прозрачная коммуникация.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="reviews-heading">
+      <div class="container">
+        <h2 class="section__title" id="reviews-heading">Отзывы партнёров</h2>
+        <div class="reviews">
+          <figure class="review">
+            <blockquote class="review__quote">Стабильное качество автопарка и диспетчеризации на протяжении нескольких лет сотрудничества.</blockquote>
+            <figcaption class="review__author">Логистический отдел, B2B-клиент</figcaption>
+          </figure>
+          <figure class="review">
+            <blockquote class="review__quote">Оперативная реакция на изменения маршрута и гибкие условия по объёму перевозок.</blockquote>
+            <figcaption class="review__author">Производственная компания</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--cta" aria-labelledby="cta-heading">
+      <div class="container cta">
+        <h2 class="cta__title" id="cta-heading">Нужен транспорт или консультация?</h2>
+        <p class="cta__text">Оставьте заявку — ответим в рабочее время и подберём решение под ваши задачи.</p>
+        <a class="button button--primary" href="contacts.html">Форма обратной связи</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <p class="footer__name">ООО «Кадровый центр ОЖД»</p>
+        <p class="footer__copy">© <span data-current-year></span> КЦ ОЖД. Все права защищены.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Нижнее меню">
+        <a class="footer__link" href="about.html">О компании</a>
+        <a class="footer__link" href="services.html">Услуги</a>
+        <button class="footer__link footer__link--button" type="button" data-modal-open="modal-disclosure">Раскрытие информации</button>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal-services" role="dialog" aria-modal="true" aria-labelledby="modal-services-title" hidden data-modal>
+    <div class="modal__backdrop" data-modal-close tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрыть окно"></button>
+      <h2 class="modal__title" id="modal-services-title">Ключевые услуги</h2>
+      <ul class="modal__list">
+        <li>Перевозка длинномерных грузов</li>
+        <li>Перевозка инертных и сыпучих грузов</li>
+        <li>Пассажирские перевозки</li>
+      </ul>
+      <a class="button button--primary" href="services.html">Подробнее об услугах</a>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-disclosure" role="dialog" aria-modal="true" aria-labelledby="modal-disclosure-title" hidden data-modal>
+    <div class="modal__backdrop" data-modal-close tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрыть окно"></button>
+      <h2 class="modal__title" id="modal-disclosure-title">Раскрытие информации</h2>
+      <p class="modal__text">Реквизиты и раскрываемая информация размещаются в соответствии с требованиями законодательства РФ. Для получения документов используйте контактную форму.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/script.js"></script>
+  <script defer src="js/analytics.js"></script>
+</body>
+</html>

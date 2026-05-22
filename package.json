@@ -1,0 +1,26 @@
+{
+  "name": "kc-ozd-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node ./tests/run-node-tests.mjs",
+    "test:jest": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js tests/validation.jest.test.js",
+    "server": "node --env-file=.env server/index.js",
+    "start": "node --env-file=.env server/index.js",
+    "db:list": "node --env-file=.env scripts/list-db.mjs",
+    "db:migrate-sqlite": "node --env-file=.env scripts/migrate-from-sqlite.mjs",
+    "site:url": "node scripts/set-site-url.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "sql.js": "^1.12.0"
+  }
+}

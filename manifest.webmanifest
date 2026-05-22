@@ -1,0 +1,18 @@
+{
+  "name": "Кадровый центр ОЖД",
+  "short_name": "КЦ ОЖД",
+  "description": "Пассажирские и грузовые перевозки, логистика Северо-Запада и РФ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e31e24",
+  "lang": "ru-RU",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

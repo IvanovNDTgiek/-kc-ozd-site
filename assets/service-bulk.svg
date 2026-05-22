@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" role="img" aria-labelledby="t">
+  <title id="t">Самосвал с сыпучим грузом</title>
+  <defs>
+    <linearGradient id="gb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="#fde8e8"/>
+      <stop offset="100%" stop-color="#e31e24"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="200" fill="url(#gb)"/>
+  <ellipse cx="120" cy="165" rx="70" ry="22" fill="#c62828" opacity="0.22"/>
+  <path d="M60 155 L200 120 L260 135 L200 165 Z" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
+  <rect x="130" y="95" width="140" height="48" rx="6" fill="#fff5f5" stroke="#e31e24" stroke-width="2"/>
+  <path d="M130 95 L200 55 L270 95 Z" fill="#f5c6c6" stroke="#e31e24" stroke-width="2"/>
+  <rect x="255" y="108" width="40" height="35" rx="4" fill="#1a1a1a" opacity="0.2"/>
+  <circle cx="155" cy="150" r="16" fill="#333"/>
+  <circle cx="155" cy="150" r="7" fill="#ccc"/>
+  <circle cx="235" cy="150" r="16" fill="#333"/>
+  <circle cx="235" cy="150" r="7" fill="#ccc"/>
+</svg>

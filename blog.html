@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Новости — Кадровый центр ОЖД</title>
+  <meta name="description" content="Новости компании: дороги, инфраструктура, развитие автопарка и региональные проекты.">
+  <meta name="theme-color" content="#e31e24">
+  <link rel="canonical" href="https://example.github.io/kc-ozd-site/blog.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page page--blog" data-page="blog">
+  <a class="skip-link" href="#main">Перейти к основному содержанию</a>
+  <header class="header" role="banner">
+    <div class="header__inner container">
+      <a class="header__logo" href="index.html" aria-label="Кадровый центр ОЖД — на главную">
+        <span class="header__logo-mark" aria-hidden="true"></span>
+        <span class="header__logo-text">КЦ ОЖД</span>
+      </a>
+      <button class="header__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="header__toggle-bar" aria-hidden="true"></span>
+        <span class="visually-hidden">Открыть меню</span>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li class="nav__item"><a class="nav__link" href="index.html">Главная</a></li>
+          <li class="nav__item"><a class="nav__link" href="about.html">О компании</a></li>
+          <li class="nav__item"><a class="nav__link" href="services.html">Услуги</a></li>
+          <li class="nav__item"><a class="nav__link nav__link--active" href="blog.html">Новости</a></li>
+          <li class="nav__item"><a class="nav__link" href="favorites.html">Избранное</a></li>
+          <li class="nav__item" data-auth-nav>
+            <div data-auth-guest>
+              <a class="nav__link" href="login.html">Вход</a><span class="nav__auth-sep" aria-hidden="true"> · </span><a class="nav__link" href="register.html">Регистрация</a>
+            </div>
+            <div class="nav__auth-user" data-auth-user hidden>
+              <span class="nav__auth-name" data-auth-name></span>
+              <button type="button" class="button button--ghost nav__auth-logout" data-auth-logout>Выйти</button>
+            </div>
+          </li>
+          <li class="nav__item"><a class="nav__link" href="contacts.html">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header__actions">
+        <label class="search-field" aria-label="Поиск по сайту">
+          <span class="visually-hidden">Поиск</span>
+          <input class="search-field__input" type="search" name="site-search" placeholder="Поиск по новостям…" autocomplete="off" data-site-search>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="main--inner" tabindex="-1">
+    <header class="page-header container">
+      <h1 class="page-header__title">Новости</h1>
+      <p class="page-header__lead">Актуальные материалы о дорожной инфраструктуре и развитии отрасли. Отмечайте избранные записи.</p>
+    </header>
+
+    <section class="section container" aria-labelledby="blog-list-heading">
+      <h2 class="visually-hidden" id="blog-list-heading">Лента новостей</h2>
+      <ul class="blog-list" data-search-root>
+        <li class="blog-list__item" id="fav-news-1" data-search-item data-favorite-id="news-1" data-search-text="федеральные трассы паводок регионы центральный северо-запад">
+          <article class="blog-card">
+            <time class="blog-card__date" datetime="2026-04-17">17.04.2026</time>
+            <h3 class="blog-card__title">Федеральные трассы 13 регионов готовят к весеннему паводку</h3>
+            <p class="blog-card__excerpt">Комплекс мер по устойчивости дорожной сети в период паводковых вод.</p>
+            <button class="blog-card__fav" type="button" data-favorite-toggle="news-1" aria-pressed="false" aria-label="В избранное: трассы и паводок">★</button>
+          </article>
+        </li>
+        <li class="blog-list__item" id="fav-news-2" data-search-item data-favorite-id="news-2" data-search-text="путепровод реконструкция а-120 ленобласть">
+          <article class="blog-card">
+            <time class="blog-card__date" datetime="2026-05-06">06.05.2026</time>
+            <h3 class="blog-card__title">Реконструкция путепровода на А-120 в Ленобласти</h3>
+            <p class="blog-card__excerpt">Завершение работ повысит пропускную способность и безопасность участка.</p>
+            <button class="blog-card__fav" type="button" data-favorite-toggle="news-2" aria-pressed="false" aria-label="В избранное: путепровод А-120">★</button>
+          </article>
+        </li>
+        <li class="blog-list__item" id="fav-news-3" data-search-item data-favorite-id="news-3" data-search-text="трассы северо-запад обновление километры">
+          <article class="blog-card">
+            <time class="blog-card__date" datetime="2026-03-28">28.03.2026</time>
+            <h3 class="blog-card__title">Более 250 км трасс обновят в четырёх регионах Северо-Запада</h3>
+            <p class="blog-card__excerpt">План модернизации покрытия и организации движения на ключевых направлениях.</p>
+            <button class="blog-card__fav" type="button" data-favorite-toggle="news-3" aria-pressed="false" aria-label="В избранное: обновление трасс">★</button>
+          </article>
+        </li>
+      </ul>
+      <p class="search-empty" hidden data-search-empty role="status">Нет новостей по запросу.</p>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <p class="footer__name">ООО «Кадровый центр ОЖД»</p>
+        <p class="footer__copy">© <span data-current-year></span> КЦ ОЖД. Все права защищены.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Нижнее меню">
+        <a class="footer__link" href="contacts.html">Контакты</a>
+        <a class="footer__link" href="services.html">Услуги</a>
+        <button class="footer__link footer__link--button" type="button" data-modal-open="modal-disclosure">Раскрытие информации</button>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal-disclosure" role="dialog" aria-modal="true" aria-labelledby="modal-disclosure-title" hidden data-modal>
+    <div class="modal__backdrop" data-modal-close tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрыть окно"></button>
+      <h2 class="modal__title" id="modal-disclosure-title">Раскрытие информации</h2>
+      <p class="modal__text">Реквизиты и раскрываемая информация размещаются в соответствии с требованиями законодательства РФ. Для получения документов используйте контактную форму.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/script.js"></script>
+  <script defer src="js/analytics.js"></script>
+</body>
+</html>

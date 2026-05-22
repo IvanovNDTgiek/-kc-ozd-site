@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Услуги — Кадровый центр ОЖД</title>
+  <meta name="description" content="Грузовые и пассажирские перевозки, длинномеры, сыпучие грузы. Полный спектр логистических услуг.">
+  <meta name="theme-color" content="#e31e24">
+  <link rel="canonical" href="https://example.github.io/kc-ozd-site/services.html">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page page--services" data-page="services">
+  <a class="skip-link" href="#main">Перейти к основному содержанию</a>
+  <header class="header" role="banner">
+    <div class="header__inner container">
+      <a class="header__logo" href="index.html" aria-label="Кадровый центр ОЖД — на главную">
+        <span class="header__logo-mark" aria-hidden="true"></span>
+        <span class="header__logo-text">КЦ ОЖД</span>
+      </a>
+      <button class="header__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span class="header__toggle-bar" aria-hidden="true"></span>
+        <span class="visually-hidden">Открыть меню</span>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Основная навигация">
+        <ul class="nav__list">
+          <li class="nav__item"><a class="nav__link" href="index.html">Главная</a></li>
+          <li class="nav__item"><a class="nav__link" href="about.html">О компании</a></li>
+          <li class="nav__item"><a class="nav__link nav__link--active" href="services.html">Услуги</a></li>
+          <li class="nav__item"><a class="nav__link" href="blog.html">Новости</a></li>
+          <li class="nav__item"><a class="nav__link" href="favorites.html">Избранное</a></li>
+          <li class="nav__item" data-auth-nav>
+            <div data-auth-guest>
+              <a class="nav__link" href="login.html">Вход</a><span class="nav__auth-sep" aria-hidden="true"> · </span><a class="nav__link" href="register.html">Регистрация</a>
+            </div>
+            <div class="nav__auth-user" data-auth-user hidden>
+              <span class="nav__auth-name" data-auth-name></span>
+              <button type="button" class="button button--ghost nav__auth-logout" data-auth-logout>Выйти</button>
+            </div>
+          </li>
+          <li class="nav__item"><a class="nav__link" href="contacts.html">Контакты</a></li>
+        </ul>
+      </nav>
+      <div class="header__actions">
+        <label class="search-field" aria-label="Поиск по сайту">
+          <span class="visually-hidden">Поиск</span>
+          <input class="search-field__input" type="search" name="site-search" placeholder="Поиск…" autocomplete="off" data-site-search>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="main--inner" tabindex="-1">
+    <header class="page-header container">
+      <h1 class="page-header__title">Услуги</h1>
+      <p class="page-header__lead">Подберём решение под тип груза, маршрут и сроки. Добавляйте услуги в избранное для быстрого доступа.</p>
+    </header>
+
+    <section class="section container" aria-labelledby="services-list-heading">
+      <h2 class="visually-hidden" id="services-list-heading">Каталог услуг</h2>
+      <ul class="service-cards" data-search-root>
+        <li class="service-cards__item" id="fav-svc-long" data-search-item data-favorite-id="svc-long" data-search-text="длинномерные грузы перевозка негабарит тралы низкорамник разрешение сопровождение страхование шпунт рельсы балки">
+          <article class="service-card">
+            <figure class="service-card__media">
+              <img src="assets/service-long.svg" width="360" height="200" alt="Схематичное изображение длинномерного груза на низкорамном полуприцепе" loading="lazy" decoding="async">
+            </figure>
+            <div class="service-card__body">
+              <h3 class="service-card__title">Перевозка длинномерных грузов</h3>
+              <div class="service-card__text">
+                <p>Организуем перевозку шпунта, рельсов, балок, труб и других негабаритных и длинномерных конструкций: подбираем тралы и низкорамники под массу, габариты и точки погрузки и разгрузки.</p>
+                <details class="service-card__details">
+                  <summary class="service-card__more">
+                    <span class="service-card__more-label service-card__more-label--expand">Подробнее</span>
+                    <span class="service-card__more-label service-card__more-label--collapse">Свернуть</span>
+                  </summary>
+                  <div class="service-card__extra">
+                    <p>Согласуем маршрут с учётом ограничений по дорогам и объектам инфраструктуры, оформляем разрешительную документацию при необходимости, обеспечиваем сопровождение и контроль соблюдения режима крепления груза.</p>
+                    <p>Работаем в связке с графиками железнодорожных и строительных площадок, чтобы поставка материалов совпадала с этапами работ и минимизировала простой техники.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <button class="service-card__fav" type="button" data-favorite-toggle="svc-long" aria-pressed="false" aria-label="Добавить в избранное: длинномерные грузы">★</button>
+          </article>
+        </li>
+        <li class="service-cards__item" id="fav-svc-bulk" data-search-item data-favorite-id="svc-bulk" data-search-text="сыпучие инертные грузы самосвал песок щебень отсев карьер объём тоннаж погрузка">
+          <article class="service-card">
+            <figure class="service-card__media">
+              <img src="assets/service-bulk.svg" width="360" height="200" alt="Схематичное изображение самосвала с сыпучим грузом" loading="lazy" decoding="async">
+            </figure>
+            <div class="service-card__body">
+              <h3 class="service-card__title">Перевозка инертных и сыпучих грузов</h3>
+              <div class="service-card__text">
+                <p>Выполняем массовые перевозки песка, щебня, отсева, гравия и других сыпучих материалов самосвальным автопарком с нужной грузоподъёмностью и объёмом кузова.</p>
+                <details class="service-card__details">
+                  <summary class="service-card__more">
+                    <span class="service-card__more-label service-card__more-label--expand">Подробнее</span>
+                    <span class="service-card__more-label service-card__more-label--collapse">Свернуть</span>
+                  </summary>
+                  <div class="service-card__extra">
+                    <p>Организуем круговую подачу на объекты ремонта пути, строительства и благоустройства примыкающих территорий; согласуем график рейсов и контроль загрузки, чтобы избежать перегруза и простоев под погрузчиком.</p>
+                    <p>Подбираем маршруты с учётом пропускного режима на территории депо и промышленных площадок, ведём переговоры с поставщиком материала по окнам отгрузки.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <button class="service-card__fav" type="button" data-favorite-toggle="svc-bulk" aria-pressed="false" aria-label="Добавить в избранное: сыпучие грузы">★</button>
+          </article>
+        </li>
+        <li class="service-cards__item" id="fav-svc-pass" data-search-item data-favorite-id="svc-pass" data-search-text="пассажирские перевозки автобус смена бригада маршрут регулярный корпоративный безопасность">
+          <article class="service-card">
+            <figure class="service-card__media">
+              <img src="assets/service-passenger.svg" width="360" height="200" alt="Схематичное изображение пассажирского автобуса" loading="lazy" decoding="async">
+            </figure>
+            <div class="service-card__body">
+              <h3 class="service-card__title">Пассажирские перевозки</h3>
+              <div class="service-card__text">
+                <p>Обеспечиваем перевозку работников и бригад по регулярным и разовым маршрутам: подача на смену, вахтовые отвозы, корпоративные и деловые поездки в пределах региона и на дальние расстояния.</p>
+                <details class="service-card__details">
+                  <summary class="service-card__more">
+                    <span class="service-card__more-label service-card__more-label--expand">Подробнее</span>
+                    <span class="service-card__more-label service-card__more-label--collapse">Свернуть</span>
+                  </summary>
+                  <div class="service-card__extra">
+                    <p>Подбираем класс автобуса по числу пассажиров и длительности рейса, следим за техническим состоянием подвижного состава и соблюдением норм безопасности и трудового расписания.</p>
+                    <p>Диспетчеризация и связь с заказчиком позволяют скорректировать время подачи при задержках поездов или изменении планов на объекте.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <button class="service-card__fav" type="button" data-favorite-toggle="svc-pass" aria-pressed="false" aria-label="Добавить в избранное: пассажирские перевозки">★</button>
+          </article>
+        </li>
+        <li class="service-cards__item" id="fav-svc-log" data-search-item data-favorite-id="svc-log" data-search-text="логистика склад доставка маршрутизация консолидация статус документы диспетчеризация">
+          <article class="service-card">
+            <figure class="service-card__media">
+              <img src="assets/service-logistics.svg" width="360" height="200" alt="Схематичное изображение цепочки поставок: коробки и маршрут" loading="lazy" decoding="async">
+            </figure>
+            <div class="service-card__body">
+              <h3 class="service-card__title">Логистика и доставка</h3>
+              <div class="service-card__text">
+                <p>Строим маршруты «от поставщика до точки вручения»: согласование окон разгрузки, консолидация мелких партий, распределение по нескольким объектам в одном регионе.</p>
+                <details class="service-card__details">
+                  <summary class="service-card__more">
+                    <span class="service-card__more-label service-card__more-label--expand">Подробнее</span>
+                    <span class="service-card__more-label service-card__more-label--collapse">Свернуть</span>
+                  </summary>
+                  <div class="service-card__extra">
+                    <p>Координируем работу водителей и получателей, ведём учёт заявок и статусов рейсов, помогаем с первичным документооборотом и актами выполненных работ по запросу заказчика.</p>
+                    <p>Интегрируем автоперевозки в общую цепочку поставок для нужд железнодорожного хозяйства и смежных подрядчиков — от срочной доставки запчастей до плановых объёмов материалов.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <button class="service-card__fav" type="button" data-favorite-toggle="svc-log" aria-pressed="false" aria-label="Добавить в избранное: логистика">★</button>
+          </article>
+        </li>
+      </ul>
+      <p class="search-empty" hidden data-search-empty role="status">Ничего не найдено. Измените запрос.</p>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <p class="footer__name">ООО «Кадровый центр ОЖД»</p>
+        <p class="footer__copy">© <span data-current-year></span> КЦ ОЖД. Все права защищены.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Нижнее меню">
+        <a class="footer__link" href="contacts.html">Контакты</a>
+        <a class="footer__link" href="blog.html">Новости</a>
+        <button class="footer__link footer__link--button" type="button" data-modal-open="modal-disclosure">Раскрытие информации</button>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="modal" id="modal-disclosure" role="dialog" aria-modal="true" aria-labelledby="modal-disclosure-title" hidden data-modal>
+    <div class="modal__backdrop" data-modal-close tabindex="-1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрыть окно"></button>
+      <h2 class="modal__title" id="modal-disclosure-title">Раскрытие информации</h2>
+      <p class="modal__text">Реквизиты и раскрываемая информация размещаются в соответствии с требованиями законодательства РФ. Для получения документов используйте контактную форму.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/script.js"></script>
+  <script defer src="js/analytics.js"></script>
+</body>
+</html>

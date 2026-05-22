@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kcozd
+      POSTGRES_PASSWORD: kcozd_local
+      POSTGRES_DB: kcozd
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U kcozd -d kcozd']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://kcozd:kcozd_local@db:5432/kcozd
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      TRUST_PROXY: 'true'
+      COOKIE_SECURE: 'true'
+      SITE_URL: https://example.com
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

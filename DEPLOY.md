@@ -1,5 +1,7 @@
 # Деплой сайта КЦ ОЖД на домен с облачной PostgreSQL
 
+Репозиторий: https://github.com/IvanovNDTgiek/kc-ozd-site (после первой загрузки — см. `scripts/push-github.ps1`).
+
 Сайт — один Node.js‑процесс (Express): статические HTML/CSS/JS и API (`/api/contact`, `/api/auth/*`). Данные хранятся в **PostgreSQL** (облако или свой сервер).
 
 ## 1. Облачная база данных

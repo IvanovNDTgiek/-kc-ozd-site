@@ -19,7 +19,11 @@ var SESSION_MS = 7 * 24 * 60 * 60 * 1000;
  * @returns {boolean}
  */
 function useSecureCookies() {
-  return process.env.NODE_ENV === 'production' || process.env.COOKIE_SECURE === 'true';
+  return (
+    process.env.NODE_ENV === 'production' ||
+    process.env.COOKIE_SECURE === 'true' ||
+    process.env.VERCEL === '1'
+  );
 }
 
 /**

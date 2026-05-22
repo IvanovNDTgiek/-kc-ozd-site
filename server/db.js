@@ -36,10 +36,14 @@ CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
 `;
 
 /**
+ * @param {string} connectionString
  * @returns {boolean | import('tls').ConnectionOptions | undefined}
  */
-function sslConfig() {
-  if (process.env.DATABASE_SSL === 'true') {
+function sslConfig(connectionString) {
+  var url = String(connectionString || '');
+  var wantSsl =
+    process.env.DATABASE_SSL === 'true' || /sslmode=require/i.test(url) || /\.supabase\.com/i.test(url);
+  if (wantSsl) {
     return { rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false' };
   }
   return undefined;
@@ -51,13 +55,27 @@ function sslConfig() {
  */
 export async function openDatabase(connectionString) {
   if (!connectionString || !String(connectionString).trim()) {
-    throw new Error('DATABASE_URL не задан. Скопируйте .env.example в .env и укажите строку подключения PostgreSQL.');
+    throw new Error('DATABASE_URL не задан. Вставьте connection string из Supabase в .env');
+  }
+
+  var cs = String(connectionString).trim();
+  if (/xxxx|\.\.\.\./i.test(cs)) {
+    throw new Error(
+      'В DATABASE_URL остались шаблоны xxxx или .... — вставьте полную строку из Supabase (Settings → Database → URI).',
+    );
+  }
+
+  if (/\.supabase\.com:6543/i.test(cs) && !/[?&]pgbouncer=true/i.test(cs)) {
+    cs += cs.includes('?') ? '&' : '?';
+    cs += 'pgbouncer=true';
   }
 
   var pool = new Pool({
-    connectionString: String(connectionString).trim(),
-    ssl: sslConfig(),
+    connectionString: cs,
+    ssl: sslConfig(cs),
     max: Number(process.env.DATABASE_POOL_MAX) || 10,
+    // Supabase pooler (порт 6543) не поддерживает prepared statements в node-pg
+    prepare: false,
   });
 
   await pool.query(SCHEMA_SQL);

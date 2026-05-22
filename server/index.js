@@ -1,31 +1,6 @@
-import express from 'express';
-import rateLimit from 'express-rate-limit';
 import os from 'os';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { openDatabase, closeDatabase, insertContactSubmission, pingDatabase } from './db.js';
-import { mountAuthRoutes } from './auth-routes.js';
-import { stripAndTruncate } from './sanitize.js';
-import {
-  validateEmail,
-  validatePhoneOptional,
-  validatePersonName,
-  validateRequiredText,
-} from '../js/modules/validation.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(__dirname, '..');
-
-/** Пути, которые нельзя отдавать как статику */
-const BLOCKED_STATIC_PREFIXES = [
-  '/node_modules',
-  '/server',
-  '/data',
-  '/scripts',
-  '/tests',
-  '/.env',
-  '/.git',
-];
+import { createApp } from './app.js';
+import { closeDatabase } from './db.js';
 
 /**
  * @param {import('express').Express} app
@@ -69,121 +44,30 @@ function getLanIPv4Addresses() {
   return out;
 }
 
-/**
- * @param {import('express').Express} app
- */
-function mountSafeStatic(app) {
-  app.use(function (req, res, next) {
-    var p = req.path || '';
-    for (var i = 0; i < BLOCKED_STATIC_PREFIXES.length; i++) {
-      if (p === BLOCKED_STATIC_PREFIXES[i] || p.startsWith(BLOCKED_STATIC_PREFIXES[i] + '/')) {
-        return res.status(404).end();
-      }
-    }
-    next();
-  });
-  app.use(
-    express.static(root, {
-      dotfiles: 'deny',
-      index: ['index.html'],
-    }),
-  );
-}
-
 async function main() {
-  var databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl || !String(databaseUrl).trim()) {
-    process.stderr.write(
-      'Ошибка: задайте DATABASE_URL (PostgreSQL).\n' +
-        '  Локально: docker compose up -d db  и скопируйте .env.example → .env\n' +
-        '  Облако: Neon / Supabase / Railway — вставьте connection string в .env\n' +
-        '  Подробнее: DEPLOY.md\n',
-    );
-    process.exit(1);
-    return;
-  }
-
-  /** @type {import('./db.js').DbPool} */
-  var db;
+  /** @type {import('express').Express} */
+  var app;
   try {
-    db = await openDatabase(databaseUrl);
+    app = await createApp();
   } catch (e) {
+    var detail = '';
+    if (e && e.errors && Array.isArray(e.errors)) {
+      detail = e.errors
+        .map(function (err) {
+          return String(err && err.message ? err.message : err);
+        })
+        .join('\n  ');
+    } else if (e && e.message) {
+      detail = String(e.message);
+    } else {
+      detail = String(e);
+    }
     process.stderr.write(
-      'Ошибка подключения к PostgreSQL. Проверьте DATABASE_URL и что БД запущена.\n' +
-        String(e && e.message ? e.message : e) +
-        '\n',
+      'Ошибка подключения к PostgreSQL. Проверьте DATABASE_URL в .env\n' + detail + '\n',
     );
     process.exit(1);
     return;
   }
-
-  var app = express();
-  app.disable('x-powered-by');
-
-  if (process.env.TRUST_PROXY === 'true' || process.env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1);
-  }
-
-  app.use(express.json({ limit: '48kb' }));
-
-  var contactLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 40,
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
-
-  var authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 60,
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
-
-  app.post('/api/contact', contactLimiter, async function (req, res) {
-    var body = req.body && typeof req.body === 'object' ? req.body : {};
-    var name = stripAndTruncate(body.name, 120);
-    var email = stripAndTruncate(body.email, 254).toLowerCase();
-    var phone = stripAndTruncate(body.phone, 32);
-    var message = stripAndTruncate(body.message, 4000);
-
-    if (!validatePersonName(name)) {
-      return res.status(400).json({ ok: false, error: 'name', message: 'Некорректное имя.' });
-    }
-    if (!validateEmail(email)) {
-      return res.status(400).json({ ok: false, error: 'email', message: 'Некорректный e-mail.' });
-    }
-    if (!validatePhoneOptional(phone)) {
-      return res.status(400).json({ ok: false, error: 'phone', message: 'Некорректный телефон.' });
-    }
-    if (!validateRequiredText(message, 4000)) {
-      return res.status(400).json({ ok: false, error: 'message', message: 'Введите сообщение.' });
-    }
-
-    try {
-      var id = await insertContactSubmission(db, {
-        name: name,
-        email: email,
-        phone: phone,
-        message: message,
-      });
-      return res.status(201).json({ ok: true, id: id });
-    } catch (err) {
-      return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка записи в базу.' });
-    }
-  });
-
-  app.get('/api/health', async function (_req, res) {
-    try {
-      await pingDatabase(db);
-      return res.json({ ok: true, db: true });
-    } catch (e) {
-      return res.status(503).json({ ok: false, db: false });
-    }
-  });
-
-  mountAuthRoutes(app, db, authLimiter);
-  mountSafeStatic(app);
 
   var basePort = Number(process.env.PORT);
   if (!Number.isFinite(basePort) || basePort < 1) {
@@ -204,33 +88,34 @@ async function main() {
       if (host === '0.0.0.0' || host === '::') {
         var addrs = getLanIPv4Addresses();
         if (addrs.length) {
-          process.stdout.write('\n--- Сеть (телефон / планшет / другой ПК в одной Wi-Fi) ---\n');
+          process.stdout.write('\n--- Сеть ---\n');
           for (var a = 0; a < addrs.length; a++) {
             process.stdout.write('http://' + addrs[a] + ':' + p + '/\n');
-            process.stdout.write('http://' + addrs[a] + ':' + p + '/contacts.html\n');
           }
         }
       }
 
       var siteUrl = process.env.SITE_URL || '';
       if (siteUrl) {
-        process.stdout.write('\nПубличный URL (SITE_URL): ' + siteUrl + '\n');
+        process.stdout.write('\nSITE_URL: ' + siteUrl + '\n');
       }
       process.stdout.write('\nPostgreSQL подключена.\n');
-      process.stdout.write('HOST=' + host + '\n');
       if (p !== basePort) {
-        process.stdout.write('(порт ' + basePort + ' был занят — использован ' + p + ')\n');
+        process.stdout.write('(порт ' + basePort + ' занят — использован ' + p + ')\n');
       }
 
-      var shutdown = async function () {
+      process.on('SIGINT', function () {
         if (server) {
           server.close();
         }
-        await closeDatabase(db);
         process.exit(0);
-      };
-      process.on('SIGINT', shutdown);
-      process.on('SIGTERM', shutdown);
+      });
+      process.on('SIGTERM', function () {
+        if (server) {
+          server.close();
+        }
+        process.exit(0);
+      });
       return;
     } catch (e) {
       lastErr = e;
@@ -241,14 +126,7 @@ async function main() {
     }
   }
 
-  await closeDatabase(db);
-  process.stderr.write(
-    'Не удалось занять порт с ' +
-      basePort +
-      '. Закройте старый node либо задайте другой порт:\n' +
-      '  set PORT=3010\n' +
-      '  npm run server\n',
-  );
+  process.stderr.write('Не удалось занять порт с ' + basePort + '.\n');
   if (lastErr) {
     process.stderr.write(String(lastErr.message || lastErr) + '\n');
   }

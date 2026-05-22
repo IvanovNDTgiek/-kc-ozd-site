@@ -13,12 +13,50 @@ function apiBase(doc) {
  * @param {HTMLFormElement} form
  * @param {string} field
  * @param {string} message
+ * @returns {boolean} true if shown under a field
  */
 function setFieldError(form, field, message) {
   var el = form.querySelector('[data-field-error="' + field + '"]');
   if (el) {
     el.textContent = message;
+    return true;
   }
+  return false;
+}
+
+/**
+ * @param {HTMLFormElement} form
+ * @param {{ error?: string; message?: string }} payload
+ */
+function showApiError(form, payload) {
+  var msg = typeof payload.message === 'string' ? payload.message : 'Не удалось выполнить запрос.';
+  var statusEl = form.querySelector('[data-form-status]');
+  if (payload.error && setFieldError(form, String(payload.error), msg)) {
+    if (statusEl) {
+      statusEl.textContent = '';
+    }
+    return;
+  }
+  if (statusEl) {
+    statusEl.textContent = msg;
+  }
+}
+
+/**
+ * @param {import('http').Response} r
+ * @returns {Promise<{ ok: boolean; json: object | null }>}
+ */
+function parseJsonResponse(r) {
+  return r.text().then(function (text) {
+    if (!text) {
+      return { ok: r.ok, json: null };
+    }
+    try {
+      return { ok: r.ok, json: JSON.parse(text) };
+    } catch (e) {
+      return { ok: false, json: { ok: false, message: 'Некорректный ответ сервера.' } };
+    }
+  });
 }
 
 /**
@@ -85,6 +123,14 @@ export function initAuthForms(doc) {
       }
 
       var statusEl = reg.querySelector('[data-form-status]');
+      var submitBtn = reg.querySelector('button[type="submit"]');
+      if (statusEl) {
+        statusEl.textContent = 'Отправка…';
+      }
+      if (submitBtn instanceof HTMLButtonElement) {
+        submitBtn.disabled = true;
+      }
+
       fetch(apiBase(doc) + '/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -96,11 +142,7 @@ export function initAuthForms(doc) {
           password_confirm: passwordConfirm,
         }),
       })
-        .then(function (r) {
-          return r.json().then(function (j) {
-            return { ok: r.ok, json: j };
-          });
-        })
+        .then(parseJsonResponse)
         .then(function (x) {
           if (x.ok && x.json && x.json.ok) {
             if (statusEl) {
@@ -109,18 +151,16 @@ export function initAuthForms(doc) {
             window.location.href = 'index.html';
             return;
           }
-          var j = x.json || {};
-          if (j.error) {
-            setFieldError(reg, String(j.error), typeof j.message === 'string' ? j.message : '');
-          }
-          if (statusEl && !j.error) {
-            statusEl.textContent =
-              typeof j.message === 'string' ? j.message : 'Не удалось зарегистрироваться.';
-          }
+          showApiError(reg, x.json || {});
         })
         .catch(function () {
           if (statusEl) {
-            statusEl.textContent = 'Сервер недоступен. Запустите npm run server.';
+            statusEl.textContent = 'Сервер недоступен. Проверьте, что сайт запущен и БД доступна.';
+          }
+        })
+        .finally(function () {
+          if (submitBtn instanceof HTMLButtonElement) {
+            submitBtn.disabled = false;
           }
         });
     });
@@ -151,17 +191,21 @@ export function initAuthForms(doc) {
       }
 
       var statusEl = login.querySelector('[data-form-status]');
+      var submitBtn = login.querySelector('button[type="submit"]');
+      if (statusEl) {
+        statusEl.textContent = 'Отправка…';
+      }
+      if (submitBtn instanceof HTMLButtonElement) {
+        submitBtn.disabled = true;
+      }
+
       fetch(apiBase(doc) + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         credentials: 'same-origin',
         body: JSON.stringify({ email: email.trim(), password: password }),
       })
-        .then(function (r) {
-          return r.json().then(function (j) {
-            return { ok: r.ok, json: j };
-          });
-        })
+        .then(parseJsonResponse)
         .then(function (x) {
           if (x.ok && x.json && x.json.ok) {
             if (statusEl) {
@@ -170,15 +214,16 @@ export function initAuthForms(doc) {
             window.location.href = 'index.html';
             return;
           }
-          var j = x.json || {};
-          if (statusEl) {
-            statusEl.textContent =
-              typeof j.message === 'string' ? j.message : 'Неверный e-mail или пароль.';
-          }
+          showApiError(login, x.json || { message: 'Неверный e-mail или пароль.' });
         })
         .catch(function () {
           if (statusEl) {
-            statusEl.textContent = 'Сервер недоступен. Запустите npm run server.';
+            statusEl.textContent = 'Сервер недоступен. Проверьте, что сайт запущен и БД доступна.';
+          }
+        })
+        .finally(function () {
+          if (submitBtn instanceof HTMLButtonElement) {
+            submitBtn.disabled = false;
           }
         });
     });

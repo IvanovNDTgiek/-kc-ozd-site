@@ -1,5 +1,5 @@
-# Загрузка проекта на https://github.com/IvanovNDTgiek
-# Запуск в PowerShell из корня проекта: .\scripts\push-github.ps1
+# Push project to https://github.com/IvanovNDTgiek/kc-ozd-site
+# Run from project root: .\scripts\push-github.ps1
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -12,35 +12,34 @@ if (-not (Test-Path $git)) {
 
 $repoName = "kc-ozd-site"
 $remoteUrl = "https://github.com/IvanovNDTgiek/$repoName.git"
+$repoUrl = "https://github.com/IvanovNDTgiek/$repoName"
 
 Write-Host "=== GitHub: IvanovNDTgiek / $repoName ===" -ForegroundColor Cyan
 
-# 1. Вход в GitHub (откроется браузер)
 $gh = Get-Command gh -ErrorAction SilentlyContinue
 if (-not $gh) {
-    Write-Host "Установите GitHub CLI: winget install GitHub.cli" -ForegroundColor Red
+    Write-Host "Install GitHub CLI: winget install GitHub.cli" -ForegroundColor Red
     exit 1
 }
 
 gh auth status 2>$null
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Войдите в GitHub (браузер)..." -ForegroundColor Yellow
+    Write-Host "Log in to GitHub (browser will open)..." -ForegroundColor Yellow
     gh auth login -h github.com -p https -w
 }
 
-# 2. Создать репозиторий (если ещё нет)
-$exists = gh repo view "IvanovNDTgiek/$repoName" 2>$null
+gh repo view "IvanovNDTgiek/$repoName" 2>$null | Out-Null
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Создаю репозиторий $repoName ..." -ForegroundColor Yellow
-    gh repo create $repoName --public --source=. --remote=origin --description "Сайт КЦ ОЖД — Express + PostgreSQL"
+    Write-Host "Creating repository $repoName ..." -ForegroundColor Yellow
+    gh repo create $repoName --public --source=. --remote=origin --description "KC OZD site - Express + PostgreSQL"
 } else {
+    Write-Host "Repository exists, configuring remote..." -ForegroundColor Yellow
     & $git remote remove origin 2>$null
     & $git remote add origin $remoteUrl
 }
 
-# 3. Push
 & $git branch -M main
 & $git push -u origin main
 
 Write-Host ""
-Write-Host "Готово: https://github.com/IvanovNDTgiek/$repoName" -ForegroundColor Green
+Write-Host "Done: $repoUrl" -ForegroundColor Green

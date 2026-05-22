@@ -17,7 +17,7 @@ var ssl =
     ? { rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false' }
     : undefined;
 
-var pool = new Pool({ connectionString: databaseUrl.trim(), ssl });
+var pool = new Pool({ connectionString: databaseUrl.trim(), ssl, prepare: false });
 
 try {
   var r = await pool.query(

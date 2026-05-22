@@ -80,7 +80,31 @@ npm run server
 
 6. В DNS у регистратора домена: **A‑запись** `@` и `www` → IP вашего VPS.
 
-### Вариант B — Railway / Render
+### Вариант B — Vercel (публичная ссылка за несколько минут)
+
+Подходит этому проекту: в репозитории есть `vercel.json` и `api/index.js` (Express как serverless + Supabase).
+
+1. Зарегистрируйтесь на [vercel.com](https://vercel.com) → **Add New Project** → Import GitHub → `IvanovNDTgiek/kc-ozd-site`.
+2. **Framework Preset:** Other (не Next.js).
+3. **Environment Variables** (как в `.env`, без файла `.env`):
+
+   | Имя | Значение |
+   |-----|----------|
+   | `DATABASE_URL` | строка из Supabase (pooler, :6543) |
+   | `DATABASE_SSL` | `true` |
+   | `DATABASE_SSL_REJECT_UNAUTHORIZED` | `false` |
+   | `NODE_ENV` | `production` |
+   | `TRUST_PROXY` | `true` |
+   | `COOKIE_SECURE` | `true` |
+
+4. **Deploy** → получите ссылку вида `https://kc-ozd-site.vercel.app`.
+5. Проверка: `https://ВАШ-ПРОЕКТ.vercel.app/api/health` → `{"ok":true,"db":true}`.
+6. Свой домен: Vercel → Project → **Settings** → **Domains** → добавить домен → DNS по инструкции Vercel.
+7. После появления домена: `SITE_URL=https://ваш-домен.ru` в Vercel env и локально `npm run site:url` + push в Git.
+
+**Ограничения Vercel:** холодный старт 1–3 с на бесплатном тарифе; для тяжёлого трафика удобнее Railway/Render (вариант C).
+
+### Вариант C — Railway / Render
 
 1. Подключите GitHub‑репозиторий.
 2. Build: `npm ci`

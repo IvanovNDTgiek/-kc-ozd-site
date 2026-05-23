@@ -96,6 +96,10 @@ npm run server
    | `NODE_ENV` | `production` |
    | `TRUST_PROXY` | `true` |
    | `COOKIE_SECURE` | `true` |
+   | `CONTACT_EMAIL_TO` | `kcozdofficial@gmail.com` |
+   | `SMTP_HOST` | `smtp.gmail.com` |
+   | `SMTP_PORT` | `587` |
+   | `SMTP_USER` / `SMTP_PASS` | Gmail и [пароль приложения](https://myaccount.google.com/apppasswords) |
 
 4. **Deploy** → получите ссылку вида `https://kc-ozd-site.vercel.app`.
 5. Проверка: `https://ВАШ-ПРОЕКТ.vercel.app/api/health` → `{"ok":true,"db":true}`.
@@ -123,12 +127,37 @@ GitHub Pages / Netlify отдают HTML, но **форма и регистра�
 - Форма на `/contacts.html` — отправка и запись в БД
 - `npm run db:list` — последние заявки (с `DATABASE_URL` на машине админа)
 
-## 5. Переменные окружения
+## 5. Почта с формы обратной связи
+
+Заявки сохраняются в БД и дублируются на **kcozdofficial@gmail.com** (можно изменить через `CONTACT_EMAIL_TO`).
+
+### Настройка Gmail
+
+1. Войдите в [Google Account](https://myaccount.google.com/) → **Безопасность** → **Двухэтапная аутентификация** (включите, если выключена).
+2. **Пароли приложений** → создайте пароль для «Почта» / «Другое».
+3. В `.env` (и в Vercel → Environment Variables):
+
+```env
+CONTACT_EMAIL_TO=kcozdofficial@gmail.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=kcozdofficial@gmail.com
+SMTP_PASS=xxxx xxxx xxxx xxxx
+```
+
+4. Перезапустите сервер (`npm run server`) или дождитесь деплоя на Vercel.
+
+Без `SMTP_*` заявка всё равно попадёт в базу, но письмо не уйдёт (в логе сервера будет предупреждение).
+
+## 6. Переменные окружения
 
 | Переменная | Обязательно | Описание |
 |------------|-------------|----------|
 | `DATABASE_URL` | Да | Строка PostgreSQL |
 | `DATABASE_SSL` | Облако | `true` для Neon/Supabase |
+| `CONTACT_EMAIL_TO` | Для почты | Куда слать заявки (по умолчанию kcozdofficial@gmail.com) |
+| `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | Для почты | SMTP-отправитель (Gmail — см. выше) |
 | `SITE_URL` | Для SEO | Без `/` в конце |
 | `NODE_ENV` | Прод | `production` |
 | `TRUST_PROXY` | За nginx | `true` |

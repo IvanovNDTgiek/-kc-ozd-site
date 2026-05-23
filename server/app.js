@@ -3,6 +3,7 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { openDatabase, insertContactSubmission, pingDatabase } from './db.js';
+import { sendContactNotification } from './mail.js';
 import { mountAuthRoutes } from './auth-routes.js';
 import { stripAndTruncate } from './sanitize.js';
 import {
@@ -116,6 +117,21 @@ export async function createApp() {
           phone: phone,
           message: message,
         });
+
+        try {
+          await sendContactNotification({
+            id: id,
+            name: name,
+            email: email,
+            phone: phone,
+            message: message,
+          });
+        } catch (mailErr) {
+          process.stderr.write(
+            'Заявка #' + id + ' сохранена, но письмо не отправлено: ' + String(mailErr && mailErr.message ? mailErr.message : mailErr) + '\n',
+          );
+        }
+
         return res.status(201).json({ ok: true, id: id });
       } catch (err) {
         return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка записи в базу.' });

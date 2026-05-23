@@ -14,7 +14,7 @@
   --radius-lg: 16px;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --container: 1120px;
-  --header-h: 72px;
+  --header-h: 80px;
   --focus-ring: 0 0 0 3px rgba(227, 30, 36, 0.35);
 }
 
@@ -106,7 +106,7 @@ a:hover {
 .header__inner {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px 16px;
   min-height: var(--header-h);
   flex-wrap: wrap;
 }
@@ -114,7 +114,8 @@ a:hover {
 .header__logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  flex-shrink: 0;
+  margin-right: 4px;
   color: var(--color-text);
   text-decoration: none;
   font-weight: 700;
@@ -136,9 +137,9 @@ a:hover {
 
 .header__logo-img {
   display: block;
-  height: 48px;
+  height: 64px;
   width: auto;
-  max-width: min(220px, 42vw);
+  max-width: min(300px, 55vw);
   object-fit: contain;
 }
 
@@ -203,7 +204,8 @@ a:hover {
 .nav {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  min-width: 0;
 }
 
 .nav__list {
@@ -211,9 +213,9 @@ a:hover {
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 8px;
+  gap: 6px 10px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .nav__link {
@@ -959,8 +961,10 @@ a:hover {
 .service-card__media img {
   display: block;
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+  height: auto;
+  aspect-ratio: 360 / 200;
+  object-fit: contain;
+  background: var(--color-elevated);
 }
 
 .service-card__body {
@@ -1076,26 +1080,18 @@ a:hover {
 @media (min-width: 520px) {
   .service-card {
     display: grid;
-    grid-template-columns: minmax(160px, 220px) 1fr;
-    grid-template-rows: 1fr;
-    align-items: stretch;
+    grid-template-columns: minmax(140px, 200px) 1fr;
+    grid-template-rows: auto;
+    align-items: start;
+    gap: 16px 20px;
   }
 
   .service-card__media {
-    margin-top: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .service-card__media img {
-    flex: 1;
-    min-height: 180px;
-    height: 100%;
+    margin-top: 2px;
   }
 
   .service-card__body {
-    height: 100%;
+    min-height: 100%;
   }
 }
 
@@ -1337,7 +1333,8 @@ a:hover {
   }
 
   .service-cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
   }
 
   .contact-layout {
@@ -1347,8 +1344,14 @@ a:hover {
 }
 
 @media (min-width: 1024px) {
+  .header__logo-img {
+    height: 68px;
+    max-width: 320px;
+  }
+
   .service-cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
   }
 }
 

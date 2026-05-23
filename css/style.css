@@ -134,6 +134,30 @@ a:hover {
   box-shadow: 0 4px 14px rgba(227, 30, 36, 0.25);
 }
 
+.header__logo-img {
+  display: block;
+  height: 48px;
+  width: auto;
+  max-width: min(220px, 42vw);
+  object-fit: contain;
+}
+
+.header__logo:has(.header__logo-img) .header__logo-mark {
+  display: none;
+}
+
+.header__logo:has(.header__logo-img) .header__logo-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .header__toggle {
   display: none;
   margin-left: auto;
@@ -311,6 +335,26 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.hero__media--logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__logo {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+  object-fit: contain;
 }
 
 .hero__image {
@@ -877,7 +921,13 @@ a:hover {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 16px;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.service-cards__item {
+  display: flex;
+  min-height: 100%;
 }
 
 .service-cards__item.is-hidden {
@@ -886,12 +936,16 @@ a:hover {
 
 .service-card {
   position: relative;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
   gap: 16px;
   padding: 20px 52px 20px 20px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
+  min-height: 100%;
 }
 
 .service-card__media {
@@ -903,14 +957,18 @@ a:hover {
 }
 
 .service-card__media img {
+  display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 360 / 200;
+  height: 180px;
   object-fit: cover;
 }
 
 .service-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   min-width: 0;
+  min-height: 0;
 }
 
 .service-card__title {
@@ -919,6 +977,9 @@ a:hover {
 }
 
 .service-card__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   margin: 0;
   color: var(--color-muted);
 }
@@ -932,7 +993,8 @@ a:hover {
 }
 
 .service-card__details {
-  margin-top: 12px;
+  margin-top: auto;
+  padding-top: 12px;
 }
 
 .service-card__details[open] {
@@ -1013,12 +1075,27 @@ a:hover {
 
 @media (min-width: 520px) {
   .service-card {
-    grid-template-columns: minmax(140px, 200px) 1fr;
-    align-items: start;
+    display: grid;
+    grid-template-columns: minmax(160px, 220px) 1fr;
+    grid-template-rows: 1fr;
+    align-items: stretch;
   }
 
   .service-card__media {
-    margin-top: 2px;
+    margin-top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service-card__media img {
+    flex: 1;
+    min-height: 180px;
+    height: 100%;
+  }
+
+  .service-card__body {
+    height: 100%;
   }
 }
 

@@ -23,15 +23,23 @@ export function initAuthNav(doc) {
   function showGuest() {
     guest.hidden = false;
     userBox.hidden = true;
+    if (logoutBtn) {
+      logoutBtn.hidden = true;
+    }
   }
 
   function showUser(name) {
     guest.hidden = true;
     userBox.hidden = false;
+    if (logoutBtn) {
+      logoutBtn.hidden = false;
+    }
     if (nameEl) {
       nameEl.textContent = name;
     }
   }
+
+  showGuest();
 
   fetch(apiBase() + '/api/auth/me', { credentials: 'same-origin' })
     .then(function (r) {

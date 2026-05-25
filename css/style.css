@@ -18,6 +18,10 @@
   --focus-ring: 0 0 0 3px rgba(227, 30, 36, 0.35);
 }
 
+[hidden] {
+  display: none !important;
+}
+
 *,
 *::before,
 *::after {

@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { openDatabase, insertContactSubmission, pingDatabase } from './db.js';
 import { sendContactNotification } from './mail.js';
-import { mountAuthRoutes } from './auth-routes.js';
+import { mountAuthRoutes, resolveSessionUser } from './auth-routes.js';
 import { stripAndTruncate } from './sanitize.js';
 import {
   validateEmail,
@@ -91,6 +91,15 @@ export async function createApp() {
     });
 
     app.post('/api/contact', contactLimiter, async function (req, res) {
+      var sessionUser = await resolveSessionUser(req, db);
+      if (!sessionUser) {
+        return res.status(401).json({
+          ok: false,
+          error: 'auth',
+          message: 'Войдите в аккаунт, чтобы отправить заявку.',
+        });
+      }
+
       var body = req.body && typeof req.body === 'object' ? req.body : {};
       var name = stripAndTruncate(body.name, 120);
       var email = stripAndTruncate(body.email, 254).toLowerCase();

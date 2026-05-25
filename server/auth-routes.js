@@ -79,6 +79,20 @@ export function clearSessionCookie(res) {
 }
 
 /**
+ * @param {import('http').IncomingMessage} req
+ * @param {import('./db.js').DbPool} db
+ * @returns {Promise<{ userId: number; email: string; display_name: string } | null>}
+ */
+export async function resolveSessionUser(req, db) {
+  await deleteExpiredSessions(db);
+  var token = readSessionCookie(req);
+  if (!token) {
+    return null;
+  }
+  return getSessionUser(db, token, Date.now());
+}
+
+/**
  * @param {import('express').Express} app
  * @param {import('./db.js').DbPool} db
  * @param {import('express').RequestHandler} [authLimiter]

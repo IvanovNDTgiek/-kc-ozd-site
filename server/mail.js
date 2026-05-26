@@ -13,11 +13,39 @@ var SMTP_PASS_PLACEHOLDERS = [
 ];
 
 /**
+ * @param {string} level
+ * @param {string} message
+ * @param {Record<string, unknown>} [extra]
+ */
+export function mailLog(level, message, extra) {
+  var ts = new Date().toISOString();
+  var line = '[' + ts + '] [mail] ' + message;
+  if (extra && Object.keys(extra).length) {
+    line += ' ' + JSON.stringify(extra);
+  }
+  if (level === 'error' || level === 'warn') {
+    process.stderr.write(line + '\n');
+  } else {
+    process.stdout.write(line + '\n');
+  }
+}
+
+/**
+ * @param {string | undefined} pass
+ * @returns {string}
+ */
+function normalizeSmtpPass(pass) {
+  return String(pass || '')
+    .trim()
+    .replace(/^["']|["']$/g, '');
+}
+
+/**
  * @param {string} pass
  * @returns {boolean}
  */
 function isRealSmtpPass(pass) {
-  var trimmed = String(pass || '').trim();
+  var trimmed = normalizeSmtpPass(pass);
   if (!trimmed || trimmed.length < 8) {
     return false;
   }
@@ -41,6 +69,39 @@ export function isMailConfigured() {
 }
 
 /**
+ * @returns {{ configured: boolean; to: string; user: string }}
+ */
+export function getMailConfigSummary() {
+  return {
+    configured: isMailConfigured(),
+    to: (process.env.CONTACT_EMAIL_TO || DEFAULT_TO).trim(),
+    user: String(process.env.SMTP_USER || '').trim(),
+  };
+}
+
+/**
+ * @returns {Promise<{ ok: boolean; error?: string }>}
+ */
+export async function verifyMailConnection() {
+  if (!isMailConfigured()) {
+    return { ok: false, error: 'smtp_not_configured' };
+  }
+  try {
+    var transporter = createTransporter();
+    await transporter.verify();
+    mailLog('info', 'SMTP-соединение проверено', {
+      host: process.env.SMTP_HOST,
+      user: process.env.SMTP_USER,
+    });
+    return { ok: true };
+  } catch (e) {
+    var msg = e && e.message ? String(e.message) : String(e);
+    mailLog('error', 'SMTP verify failed', { error: msg });
+    return { ok: false, error: msg };
+  }
+}
+
+/**
  * @returns {import('nodemailer').Transporter}
  */
 function createTransporter() {
@@ -56,7 +117,7 @@ function createTransporter() {
     secure: secure,
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      pass: normalizeSmtpPass(process.env.SMTP_PASS),
     },
   });
 }
@@ -80,15 +141,19 @@ function escapeHtml(value) {
 export async function sendContactNotification(row) {
   var to = (process.env.CONTACT_EMAIL_TO || DEFAULT_TO).trim();
   if (!to) {
+    mailLog('warn', 'Письмо не отправлено: CONTACT_EMAIL_TO пустой', { id: row.id });
     return { sent: false, skipped: true, error: 'CONTACT_EMAIL_TO empty' };
   }
 
   if (!isMailConfigured()) {
-    process.stderr.write(
-      'Почта не настроена: задайте SMTP_HOST, SMTP_USER, SMTP_PASS в .env (см. .env.example).\n',
-    );
+    mailLog('warn', 'Письмо не отправлено: SMTP не настроен в .env', {
+      id: row.id,
+      hint: 'SMTP_HOST, SMTP_USER, SMTP_PASS',
+    });
     return { sent: false, skipped: true, error: 'smtp_not_configured' };
   }
+
+  mailLog('info', 'Отправка письма по заявке…', { id: row.id, to: to, from: process.env.SMTP_USER });
 
   var from =
     process.env.SMTP_FROM && String(process.env.SMTP_FROM).trim()
@@ -136,15 +201,26 @@ export async function sendContactNotification(row) {
     escapeHtml(row.message) +
     '</pre>';
 
-  var transporter = createTransporter();
-  await transporter.sendMail({
-    from: from,
-    to: to,
-    replyTo: row.email,
-    subject: subject,
-    text: text,
-    html: html,
-  });
-
-  return { sent: true };
+  try {
+    var transporter = createTransporter();
+    var info = await transporter.sendMail({
+      from: from,
+      to: to,
+      replyTo: row.email,
+      subject: subject,
+      text: text,
+      html: html,
+    });
+    mailLog('info', 'Письмо отправлено', {
+      id: row.id,
+      to: to,
+      messageId: info && info.messageId ? info.messageId : undefined,
+      response: info && info.response ? info.response : undefined,
+    });
+    return { sent: true, messageId: info && info.messageId ? info.messageId : undefined };
+  } catch (e) {
+    var errMsg = e && e.message ? String(e.message) : String(e);
+    mailLog('error', 'Ошибка отправки письма', { id: row.id, to: to, error: errMsg });
+    throw e;
+  }
 }

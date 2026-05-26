@@ -128,16 +128,30 @@ export async function createApp() {
         });
 
         try {
-          await sendContactNotification({
+          var mailResult = await sendContactNotification({
             id: id,
             name: name,
             email: email,
             phone: phone,
             message: message,
           });
+          if (!mailResult.sent) {
+            process.stderr.write(
+              '[contact] Заявка #' +
+                id +
+                ' в БД, письмо не ушло: ' +
+                String(mailResult.error || 'unknown') +
+                (mailResult.skipped ? ' (пропущено)' : '') +
+                '\n',
+            );
+          }
         } catch (mailErr) {
           process.stderr.write(
-            'Заявка #' + id + ' сохранена, но письмо не отправлено: ' + String(mailErr && mailErr.message ? mailErr.message : mailErr) + '\n',
+            '[contact] Заявка #' +
+              id +
+              ' в БД, ошибка почты: ' +
+              String(mailErr && mailErr.message ? mailErr.message : mailErr) +
+              '\n',
           );
         }
 

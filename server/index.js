@@ -1,7 +1,7 @@
 import os from 'os';
 import { createApp } from './app.js';
 import { closeDatabase } from './db.js';
-import { isMailConfigured } from './mail.js';
+import { getMailConfigSummary, verifyMailConnection } from './mail.js';
 
 /**
  * @param {import('express').Express} app
@@ -101,12 +101,17 @@ async function main() {
         process.stdout.write('\nSITE_URL: ' + siteUrl + '\n');
       }
       process.stdout.write('\nPostgreSQL подключена.\n');
-      if (isMailConfigured()) {
-        var mailTo = (process.env.CONTACT_EMAIL_TO || 'kcozdofficial@gmail.com').trim();
-        process.stdout.write('Почта: заявки с формы → ' + mailTo + '\n');
+      var mailCfg = getMailConfigSummary();
+      if (mailCfg.configured) {
+        process.stdout.write('Почта: заявки с формы → ' + mailCfg.to + ' (SMTP: ' + mailCfg.user + ')\n');
+        verifyMailConnection().then(function (v) {
+          if (!v.ok) {
+            process.stderr.write('Почта: SMTP verify не прошёл — ' + String(v.error || '') + '\n');
+          }
+        });
       } else {
         process.stdout.write(
-          'Почта: не настроена — укажите SMTP_PASS (пароль приложения Google) в .env\n',
+          'Почта: не настроена — укажите SMTP_PASS (пароль приложения Google) в .env и перезапустите сервер\n',
         );
       }
       if (p !== basePort) {

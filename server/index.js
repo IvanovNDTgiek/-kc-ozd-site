@@ -1,6 +1,7 @@
 import os from 'os';
 import { createApp } from './app.js';
 import { closeDatabase } from './db.js';
+import { isMailConfigured } from './mail.js';
 
 /**
  * @param {import('express').Express} app
@@ -100,6 +101,14 @@ async function main() {
         process.stdout.write('\nSITE_URL: ' + siteUrl + '\n');
       }
       process.stdout.write('\nPostgreSQL подключена.\n');
+      if (isMailConfigured()) {
+        var mailTo = (process.env.CONTACT_EMAIL_TO || 'kcozdofficial@gmail.com').trim();
+        process.stdout.write('Почта: заявки с формы → ' + mailTo + '\n');
+      } else {
+        process.stdout.write(
+          'Почта: не настроена — укажите SMTP_PASS (пароль приложения Google) в .env\n',
+        );
+      }
       if (p !== basePort) {
         process.stdout.write('(порт ' + basePort + ' занят — использован ' + p + ')\n');
       }

@@ -2,6 +2,33 @@ import nodemailer from 'nodemailer';
 
 var DEFAULT_TO = 'kcozdofficial@gmail.com';
 
+/** @type {RegExp[]} */
+var SMTP_PASS_PLACEHOLDERS = [
+  /^ваш_пароль/i,
+  /^пароль_приложения/i,
+  /^xxxx/i,
+  /^your_/i,
+  /^change_me/i,
+  /^password$/i,
+];
+
+/**
+ * @param {string} pass
+ * @returns {boolean}
+ */
+function isRealSmtpPass(pass) {
+  var trimmed = String(pass || '').trim();
+  if (!trimmed || trimmed.length < 8) {
+    return false;
+  }
+  for (var i = 0; i < SMTP_PASS_PLACEHOLDERS.length; i++) {
+    if (SMTP_PASS_PLACEHOLDERS[i].test(trimmed)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /**
  * @returns {boolean}
  */
@@ -9,8 +36,7 @@ export function isMailConfigured() {
   return !!(
     process.env.SMTP_HOST &&
     process.env.SMTP_USER &&
-    process.env.SMTP_PASS &&
-    String(process.env.SMTP_PASS).trim()
+    isRealSmtpPass(process.env.SMTP_PASS)
   );
 }
 

@@ -9,6 +9,7 @@
     "start": "node --env-file=.env server/index.js",
     "db:list": "node --env-file=.env scripts/list-db.mjs",
     "db:test": "node --env-file=.env scripts/test-db-connection.mjs",
+    "mail:test": "node --env-file=.env scripts/test-mail.mjs",
     "db:migrate-sqlite": "node --env-file=.env scripts/migrate-from-sqlite.mjs",
     "site:url": "node scripts/set-site-url.mjs"
   },

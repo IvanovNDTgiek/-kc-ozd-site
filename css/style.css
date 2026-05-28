@@ -268,15 +268,24 @@ a:hover {
   align-items: center;
 }
 
+.nav__item[data-auth-nav] > [data-auth-guest] {
+  display: inline-flex;
+  align-items: center;
+}
+
 .nav__auth-user {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
 }
 
 .nav__auth-name {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 0;
+  line-height: 1;
   font-weight: 600;
   color: var(--color-text);
   max-width: 160px;
@@ -286,8 +295,9 @@ a:hover {
 }
 
 .nav__auth-logout {
-  padding: 6px 12px;
-  font-size: 0.875rem;
+  padding: 10px 12px;
+  font-size: 0.9375rem;
+  line-height: 1;
 }
 
 .nav__auth-sep {

@@ -266,11 +266,13 @@ a:hover {
 .nav__item[data-auth-nav] {
   display: flex;
   align-items: center;
+  align-self: stretch;
 }
 
 .nav__item[data-auth-nav] > [data-auth-guest] {
   display: inline-flex;
   align-items: center;
+  height: 100%;
 }
 
 .nav__auth-user {
@@ -279,13 +281,15 @@ a:hover {
   gap: 10px;
   flex-wrap: nowrap;
   justify-content: center;
+  height: 100%;
 }
 
 .nav__auth-name {
   display: inline-flex;
   align-items: center;
-  padding: 10px 0;
-  line-height: 1;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  line-height: 1.25;
   font-weight: 600;
   color: var(--color-text);
   max-width: 160px;
@@ -295,9 +299,10 @@ a:hover {
 }
 
 .nav__auth-logout {
-  padding: 10px 12px;
-  font-size: 0.9375rem;
-  line-height: 1;
+  padding: 10px 14px;
+  font-size: inherit;
+  line-height: 1.25;
+  margin: 0;
 }
 
 .nav__auth-sep {

@@ -289,9 +289,10 @@ a:hover {
   align-items: center;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
-  line-height: 1.25;
-  font-weight: 600;
-  color: var(--color-text);
+  line-height: normal;
+  font-weight: 500;
+  color: var(--color-muted);
+  font-size: inherit;
   max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -299,10 +300,24 @@ a:hover {
 }
 
 .nav__auth-logout {
+  display: inline-flex;
+  align-items: center;
   padding: 10px 14px;
   font-size: inherit;
-  line-height: 1.25;
+  font-weight: 500;
+  line-height: normal;
   margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.nav__auth-name:hover,
+.nav__auth-logout:hover {
+  color: var(--color-accent);
+  background: rgba(227, 30, 36, 0.06);
 }
 
 .nav__auth-sep {

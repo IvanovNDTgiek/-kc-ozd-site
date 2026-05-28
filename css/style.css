@@ -222,6 +222,17 @@ a:hover {
   justify-content: flex-start;
 }
 
+@media (min-width: 768px) {
+  .page--no-search .nav {
+    justify-content: center;
+  }
+
+  .page--no-search .nav__list {
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+}
+
 .nav__link {
   display: inline-block;
   padding: 10px 14px;

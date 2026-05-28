@@ -231,6 +231,16 @@ a:hover {
     justify-content: center;
     flex-wrap: nowrap;
   }
+
+  .page--services .nav__list,
+  .page--favorites .nav__list {
+    flex-wrap: nowrap;
+  }
+
+  .page--services .nav__link,
+  .page--favorites .nav__link {
+    padding: 10px 10px;
+  }
 }
 
 .nav__link {

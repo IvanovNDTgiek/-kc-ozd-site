@@ -7,6 +7,7 @@ import { initFavorites } from './modules/favorites.js';
 import { initContactForm } from './modules/form.js';
 import { initAuthForms } from './modules/auth-forms.js';
 import { initAuthNav } from './modules/auth-nav.js';
+import { initProfilePage } from './modules/profile-page.js';
 
 function setCurrentYear(doc) {
   var y = new Date().getFullYear();
@@ -26,6 +27,7 @@ try {
   initContactForm(document);
   initAuthForms(document);
   initAuthNav(document);
+  initProfilePage(document);
 } catch (e) {
   /* fail-safe: static site remains usable */
 }

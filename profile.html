@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>О компании — Кадровый центр ОЖД</title>
-  <meta name="description" content="История, миссия и структура ООО «Кадровый центр ОЖД». Надёжный партнёр в сфере транспорта и логистики.">
+  <title>Профиль — Кадровый центр ОЖД</title>
+  <meta name="description" content="Личный кабинет: данные пользователя и отправленные заявки с формы обратной связи.">
   <meta name="theme-color" content="#e31e24">
-  <link rel="canonical" href="https://example.github.io/kc-ozd-site/about.html">
+  <meta name="api-base" content="">
+  <link rel="canonical" href="https://example.github.io/kc-ozd-site/profile.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="page page--about page--no-search" data-page="about">
+<body class="page page--profile page--no-search" data-page="profile">
   <a class="skip-link" href="#main">Перейти к основному содержанию</a>
   <header class="header" role="banner">
     <div class="header__inner container">
@@ -29,7 +30,7 @@
       <nav class="nav" id="site-nav" aria-label="Основная навигация">
         <ul class="nav__list">
           <li class="nav__item"><a class="nav__link" href="index.html">Главная</a></li>
-          <li class="nav__item"><a class="nav__link nav__link--active" href="about.html">О компании</a></li>
+          <li class="nav__item"><a class="nav__link" href="about.html">О компании</a></li>
           <li class="nav__item"><a class="nav__link" href="services.html">Услуги</a></li>
           <li class="nav__item"><a class="nav__link" href="blog.html">Новости</a></li>
           <li class="nav__item"><a class="nav__link" href="favorites.html">Избранное</a></li>
@@ -48,22 +49,28 @@
     </div>
   </header>
 
-  <main id="main" class="main--inner" tabindex="-1">
+  <main id="main" class="main--inner" tabindex="-1" data-profile-root>
     <header class="page-header container">
-      <h1 class="page-header__title">О компании</h1>
-      <p class="page-header__lead">Мы развиваем транспортные и логистические компетенции, опираясь на опыт работы с инфраструктурой ОЖД.</p>
+      <h1 class="page-header__title">Мой профиль</h1>
+      <p class="page-header__lead">Данные учётной записи и история заявок с формы обратной связи.</p>
     </header>
 
-    <section class="section container prose" aria-labelledby="about-mission">
-      <h2 id="about-mission">Миссия</h2>
-      <p>Обеспечивать заказчиков своевременными и безопасными перевозками, сочетая современный автопарк, диспетчеризацию и ответственность персонала в соответствии с <a class="link" href="https://gktgs.ru/assets/files/gost/gost-26653-2015-podgotovka-generalnyh-gruzov-k-transportirovaniyu-obshchie-trebovaniya.pdf#:~:text=%D0%9D%D0%B0%D1%81%D1%82%D0%BE%D1%8F%D1%89%D0%B8%D0%B9%20%D1%81%D1%82%D0%B0%D0%BD%D0%B4%D0%B0%D1%80%D1%82%20%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%B0%D0%B2%D0%BB%D0%B8%D0%B2%D0%B0%D0%B5%D1%82%20%D0%BE%D0%B1%D1%89%D0%B8%D0%B5%20%D1%82%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D0%BF%D0%BE%20%D0%BF%D0%BE%D0%B4%D0%B3%D0%BE%D1%82%D0%BE%D0%B2%D0%BA%D0%B5%20%D0%B3%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85,%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D1%8C%D0%BD%D1%8B%D0%BC%2C%20%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%88%D0%BD%D1%8B%D0%BC%2C%20%D0%B6%D0%B5%D0%BB%D0%B5%D0%B7%D0%BD%D0%BE%D0%B4%D0%BE%20%D1%80%D0%BE%D0%B6%D0%BD%D1%8B%D0%BC%2C%20%D0%BC%D0%BE%D1%80%D1%81%D0%BA%D0%B8%D0%BC%20%D0%B8%20%D1%80%D0%B5%D1%87%D0%BD%D1%8B%D0%BC%20%D1%82%D1%80%D0%B0%D0%BD%D1%81%D0%BF%D0%BE%D1%80%D1%82%D0%BE%D0%BC." target="_blank" rel="noopener noreferrer">ГОСТ 26653-2015</a>.</p>
-      <h2>История и направление</h2>
-      <p>Компания сформирована 22 июня 2007 года в качестве дочерней компании ООО"РЖД" для комплексного обслуживания перевозочного процесса в регионе присутствия Октябрьской железной дороги и за его пределами. С течением временни организация на фоне коммерческого успеха приняла решение о сотрудничестве с сторонними фирмами и частными лицами.</p>
-      <h2>Органы управления и структура</h2>
-      <p>Управление компанией осуществляется в соответствии с корпоративными процедурами. Структурные подразделения представлены в ключевых регионах Северо-Запада и Московской области.
-  
-      </p>
-      <p><a class="link" href="contacts.html">Связаться с представительством</a></p>
+    <section class="section container section--tight" aria-labelledby="profile-heading">
+      <h2 class="visually-hidden" id="profile-heading">Профиль пользователя</h2>
+      <p class="form__status" role="status" aria-live="polite" data-profile-status></p>
+
+      <div class="profile-card" data-profile-user hidden>
+        <h3 class="profile-card__title">Данные пользователя</h3>
+        <div data-profile-user-details></div>
+      </div>
+
+      <div class="profile-submissions-wrap">
+        <h3 class="section__title profile-submissions__title">Отправленные заявки</h3>
+        <ul class="profile-submissions" data-profile-submissions hidden></ul>
+        <p class="profile-empty" data-profile-empty hidden>
+          Заявок пока нет. Отправьте обращение на странице <a class="link" href="contacts.html">Контакты</a>.
+        </p>
+      </div>
     </section>
   </main>
 
@@ -74,8 +81,8 @@
         <p class="footer__copy">© <span data-current-year></span> КЦ ОЖД. Все права защищены.</p>
       </div>
       <nav class="footer__nav" aria-label="Нижнее меню">
+        <a class="footer__link" href="contacts.html">Контакты</a>
         <a class="footer__link" href="services.html">Услуги</a>
-        <a class="footer__link" href="blog.html">Новости</a>
         <button class="footer__link footer__link--button" type="button" data-modal-open="modal-disclosure">Раскрытие информации</button>
       </nav>
     </div>

@@ -125,6 +125,7 @@ export async function createApp() {
           email: email,
           phone: phone,
           message: message,
+          userId: sessionUser.userId,
         });
 
         try {

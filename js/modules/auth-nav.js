@@ -36,6 +36,9 @@ export function initAuthNav(doc) {
     }
     if (nameEl) {
       nameEl.textContent = name;
+      if (doc.body.dataset.page === 'profile') {
+        nameEl.classList.add('nav__link--active');
+      }
     }
   }
 

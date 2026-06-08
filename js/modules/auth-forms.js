@@ -49,12 +49,32 @@ function showApiError(form, payload) {
 function parseJsonResponse(r) {
   return r.text().then(function (text) {
     if (!text) {
-      return { ok: r.ok, json: null };
+      return {
+        ok: r.ok,
+        json: r.ok ? null : { ok: false, message: 'Пустой ответ сервера.' },
+      };
+    }
+    var trimmed = text.trim();
+    if (trimmed.charAt(0) === '<') {
+      return {
+        ok: false,
+        json: {
+          ok: false,
+          message:
+            'API недоступен. Откройте сайт через npm run server (http://127.0.0.1:3000), а не как файл с диска.',
+        },
+      };
     }
     try {
       return { ok: r.ok, json: JSON.parse(text) };
     } catch (e) {
-      return { ok: false, json: { ok: false, message: 'Некорректный ответ сервера.' } };
+      return {
+        ok: false,
+        json: {
+          ok: false,
+          message: 'Некорректный ответ сервера. Проверьте, что запущен npm run server.',
+        },
+      };
     }
   });
 }

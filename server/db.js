@@ -35,6 +35,11 @@ CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
 `;
 
+const MIGRATION_SQL = `
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS idx_contact_user ON contact_submissions(user_id);
+`;
+
 /**
  * @param {string} connectionString
  * @returns {boolean | import('tls').ConnectionOptions | undefined}
@@ -47,6 +52,84 @@ function sslConfig(connectionString) {
     return { rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false' };
   }
   return undefined;
+}
+
+/**
+ * @param {string} sql
+ * @returns {string[]}
+ */
+function splitSqlStatements(sql) {
+  return String(sql || '')
+    .split(';')
+    .map(function (s) {
+      return s.trim();
+    })
+    .filter(function (s) {
+      return s.length > 0;
+    });
+}
+
+/**
+ * @param {{ query: (sql: string) => Promise<unknown> }} runner
+ * @param {string} sql
+ */
+async function runSqlStatements(runner, sql) {
+  var parts = splitSqlStatements(sql);
+  for (var i = 0; i < parts.length; i++) {
+    await runner.query(parts[i]);
+  }
+}
+
+/**
+ * Для Supabase: DDL через transaction pooler (6543) даёт ECONNRESET — используем session (5432).
+ * @param {string} connectionString
+ * @returns {string}
+ */
+function schemaConnectionString(connectionString) {
+  var cs = String(connectionString || '').trim();
+  if (/\.supabase\.com:6543/i.test(cs)) {
+    cs = cs.replace(/:6543\//, ':5432/');
+    cs = cs.replace(/[?&]pgbouncer=true/gi, '');
+    cs = cs.replace(/[?&]$/, '');
+  }
+  return cs;
+}
+
+/**
+ * @param {string} connectionString
+ */
+async function ensureSchema(connectionString) {
+  var cs = schemaConnectionString(connectionString);
+  var client = new pg.Client({
+    connectionString: cs,
+    ssl: sslConfig(connectionString),
+    connectionTimeoutMillis: 20000,
+  });
+  client.on('error', function () {
+    /* игнорируем фоновые ошибки закрытого соединения */
+  });
+  try {
+    await client.connect();
+    await runSqlStatements(client, SCHEMA_SQL);
+    await runSqlStatements(client, MIGRATION_SQL);
+  } finally {
+    try {
+      await client.end();
+    } catch (e) {
+      /* already closed */
+    }
+  }
+}
+
+/**
+ * @param {DbPool} pool
+ * @returns {Promise<boolean>}
+ */
+async function tablesReady(pool) {
+  var r = await pool.query(
+    `SELECT to_regclass('public.users') AS users, to_regclass('public.sessions') AS sessions`,
+  );
+  return !!(r.rows[0] && r.rows[0].users && r.rows[0].sessions);
 }
 
 /**
@@ -74,11 +157,25 @@ export async function openDatabase(connectionString) {
     connectionString: cs,
     ssl: sslConfig(cs),
     max: Number(process.env.DATABASE_POOL_MAX) || 10,
+    connectionTimeoutMillis: 15000,
     // Supabase pooler (порт 6543) не поддерживает prepared statements в node-pg
     prepare: false,
   });
 
-  await pool.query(SCHEMA_SQL);
+  if (await tablesReady(pool)) {
+    try {
+      await runSqlStatements(pool, MIGRATION_SQL);
+    } catch (migrationErr) {
+      process.stderr.write(
+        'Предупреждение: миграция user_id не применена: ' +
+          String(migrationErr && migrationErr.message ? migrationErr.message : migrationErr) +
+          '\n',
+      );
+    }
+    return pool;
+  }
+
+  await ensureSchema(cs);
   return pool;
 }
 
@@ -91,15 +188,65 @@ export async function closeDatabase(pool) {
 
 /**
  * @param {DbPool} pool
- * @param {{ name: string; email: string; phone: string; message: string }} row
+ * @param {{ name: string; email: string; phone: string; message: string; userId?: number | null }} row
  * @returns {Promise<number>}
  */
 export async function insertContactSubmission(pool, row) {
+  var userId = row.userId != null && Number.isFinite(Number(row.userId)) ? Number(row.userId) : null;
   var r = await pool.query(
-    'INSERT INTO contact_submissions (name, email, phone, message) VALUES ($1, $2, $3, $4) RETURNING id',
-    [row.name, row.email, row.phone, row.message],
+    'INSERT INTO contact_submissions (name, email, phone, message, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+    [row.name, row.email, row.phone, row.message, userId],
   );
   return Number(r.rows[0].id);
+}
+
+/**
+ * @param {DbPool} pool
+ * @param {number} userId
+ * @returns {Promise<{ id: number; email: string; display_name: string; created_at: string } | null>}
+ */
+export async function getUserById(pool, userId) {
+  var r = await pool.query(
+    'SELECT id, email, display_name, created_at FROM users WHERE id = $1 LIMIT 1',
+    [userId],
+  );
+  if (!r.rows.length) {
+    return null;
+  }
+  var o = r.rows[0];
+  return {
+    id: Number(o.id),
+    email: String(o.email),
+    display_name: String(o.display_name),
+    created_at: o.created_at instanceof Date ? o.created_at.toISOString() : String(o.created_at),
+  };
+}
+
+/**
+ * @param {DbPool} pool
+ * @param {number} userId
+ * @param {string} email
+ * @returns {Promise<{ id: number; created_at: string; name: string; email: string; phone: string; message: string }[]>}
+ */
+export async function getContactSubmissionsForUser(pool, userId, email) {
+  var r = await pool.query(
+    `SELECT id, created_at, name, email, phone, message
+     FROM contact_submissions
+     WHERE user_id = $1 OR (user_id IS NULL AND lower(email) = lower($2))
+     ORDER BY created_at DESC
+     LIMIT 100`,
+    [userId, email],
+  );
+  return r.rows.map(function (o) {
+    return {
+      id: Number(o.id),
+      created_at: o.created_at instanceof Date ? o.created_at.toISOString() : String(o.created_at),
+      name: String(o.name),
+      email: String(o.email),
+      phone: String(o.phone || ''),
+      message: String(o.message),
+    };
+  });
 }
 
 /**

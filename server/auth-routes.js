@@ -4,7 +4,9 @@ import {
   deleteSession,
   deleteSessionsForUser,
   getSessionUser,
+  getContactSubmissionsForUser,
   getUserByEmail,
+  getUserById,
   insertSession,
   insertUser,
 } from './db.js';
@@ -104,6 +106,33 @@ export function mountAuthRoutes(app, db, authLimiter) {
       : function (_req, _res, next) {
           next();
         };
+
+  app.get('/api/profile', lim, async function (req, res) {
+    try {
+      var sessionUser = await resolveSessionUser(req, db);
+      if (!sessionUser) {
+        return res.status(401).json({ ok: false, error: 'auth', message: 'Войдите в аккаунт.' });
+      }
+
+      var user = await getUserById(db, sessionUser.userId);
+      if (!user) {
+        return res.status(404).json({ ok: false, error: 'user', message: 'Пользователь не найден.' });
+      }
+
+      var submissions = await getContactSubmissionsForUser(db, sessionUser.userId, sessionUser.email);
+      return res.json({
+        ok: true,
+        user: {
+          email: user.email,
+          display_name: user.display_name,
+          created_at: user.created_at,
+        },
+        submissions: submissions,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка загрузки профиля.' });
+    }
+  });
 
   app.get('/api/auth/me', lim, async function (req, res) {
     try {

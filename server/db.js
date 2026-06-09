@@ -38,6 +38,18 @@ CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
 const MIGRATION_SQL = `
 ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL;
 CREATE INDEX IF NOT EXISTS idx_contact_user ON contact_submissions(user_id);
+
+CREATE TABLE IF NOT EXISTS user_favorites (
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  item_id TEXT NOT NULL,
+  title TEXT NOT NULL DEFAULT '',
+  href TEXT NOT NULL DEFAULT '',
+  excerpt TEXT NOT NULL DEFAULT '',
+  kind TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, item_id)
+);
+CREATE INDEX IF NOT EXISTS idx_user_favorites_user ON user_favorites(user_id);
 `;
 
 /**
@@ -351,4 +363,57 @@ export async function deleteSession(pool, token) {
 export async function pingDatabase(pool) {
   await pool.query('SELECT 1');
   return true;
+}
+
+/**
+ * @param {DbPool} pool
+ * @param {number} userId
+ * @returns {Promise<{ id: string; title: string; href: string; excerpt: string; kind: string }[]>}
+ */
+export async function getUserFavorites(pool, userId) {
+  var r = await pool.query(
+    `SELECT item_id, title, href, excerpt, kind
+     FROM user_favorites
+     WHERE user_id = $1
+     ORDER BY created_at ASC`,
+    [userId],
+  );
+  return r.rows.map(function (o) {
+    return {
+      id: String(o.item_id),
+      title: String(o.title || ''),
+      href: String(o.href || ''),
+      excerpt: String(o.excerpt || ''),
+      kind: String(o.kind || ''),
+    };
+  });
+}
+
+/**
+ * @param {DbPool} pool
+ * @param {number} userId
+ * @param {{ id: string; title: string; href: string; excerpt: string; kind: string }} item
+ */
+export async function upsertUserFavorite(pool, userId, item) {
+  await pool.query(
+    `INSERT INTO user_favorites (user_id, item_id, title, href, excerpt, kind)
+     VALUES ($1, $2, $3, $4, $5, $6)
+     ON CONFLICT (user_id, item_id) DO UPDATE SET
+       title = EXCLUDED.title,
+       href = EXCLUDED.href,
+       excerpt = EXCLUDED.excerpt,
+       kind = EXCLUDED.kind`,
+    [userId, item.id, item.title, item.href, item.excerpt, item.kind],
+  );
+}
+
+/**
+ * @param {DbPool} pool
+ * @param {number} userId
+ * @param {string} itemId
+ * @returns {Promise<boolean>} true if a row was removed
+ */
+export async function removeUserFavorite(pool, userId, itemId) {
+  var r = await pool.query('DELETE FROM user_favorites WHERE user_id = $1 AND item_id = $2', [userId, itemId]);
+  return (r.rowCount || 0) > 0;
 }

@@ -7,8 +7,11 @@ import {
   getContactSubmissionsForUser,
   getUserByEmail,
   getUserById,
+  getUserFavorites,
   insertSession,
   insertUser,
+  removeUserFavorite,
+  upsertUserFavorite,
 } from './db.js';
 import { hashPassword, verifyPassword } from './password.js';
 import { stripAndTruncate } from './sanitize.js';
@@ -16,6 +19,19 @@ import { validateDisplayName, validateEmail, validatePassword } from '../js/modu
 
 var COOKIE_NAME = 'sid';
 var SESSION_MS = 7 * 24 * 60 * 60 * 1000;
+var FAVORITE_ID_RE = /^[a-z0-9][a-z0-9_-]{0,199}$/i;
+
+/**
+ * @param {unknown} value
+ * @returns {string}
+ */
+function favoriteItemId(value) {
+  var id = stripAndTruncate(value, 200);
+  if (!id || !FAVORITE_ID_RE.test(id)) {
+    return '';
+  }
+  return id;
+}
 
 /**
  * @returns {boolean}
@@ -263,6 +279,107 @@ export function mountAuthRoutes(app, db, authLimiter) {
       return res.json({ ok: true });
     } catch (err) {
       return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка выхода.' });
+    }
+  });
+
+  app.get('/api/favorites', lim, async function (req, res) {
+    try {
+      var sessionUser = await resolveSessionUser(req, db);
+      if (!sessionUser) {
+        return res.status(401).json({ ok: false, error: 'auth', message: 'Войдите в аккаунт.' });
+      }
+      var items = await getUserFavorites(db, sessionUser.userId);
+      return res.json({ ok: true, items: items });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка загрузки избранного.' });
+    }
+  });
+
+  app.post('/api/favorites/toggle', lim, async function (req, res) {
+    try {
+      var sessionUser = await resolveSessionUser(req, db);
+      if (!sessionUser) {
+        return res.status(401).json({ ok: false, error: 'auth', message: 'Войдите в аккаунт.' });
+      }
+
+      var body = req.body && typeof req.body === 'object' ? req.body : {};
+      var itemId = favoriteItemId(body.item_id);
+      if (!itemId) {
+        return res.status(400).json({ ok: false, error: 'item_id', message: 'Некорректный идентификатор.' });
+      }
+
+      var title = stripAndTruncate(body.title, 400);
+      var href = stripAndTruncate(body.href, 2000);
+      var excerpt = stripAndTruncate(body.excerpt, 600);
+      var kind = stripAndTruncate(body.kind, 120) || 'Избранное';
+
+      var existing = await getUserFavorites(db, sessionUser.userId);
+      var has = existing.some(function (x) {
+        return x.id === itemId;
+      });
+
+      if (has) {
+        await removeUserFavorite(db, sessionUser.userId, itemId);
+        return res.json({ ok: true, added: false, item_id: itemId });
+      }
+
+      if (!title || !href) {
+        return res.status(400).json({
+          ok: false,
+          error: 'meta',
+          message: 'Для добавления нужны название и ссылка.',
+        });
+      }
+
+      await upsertUserFavorite(db, sessionUser.userId, {
+        id: itemId,
+        title: title,
+        href: href,
+        excerpt: excerpt,
+        kind: kind,
+      });
+      return res.json({ ok: true, added: true, item_id: itemId });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка обновления избранного.' });
+    }
+  });
+
+  app.post('/api/favorites/sync', lim, async function (req, res) {
+    try {
+      var sessionUser = await resolveSessionUser(req, db);
+      if (!sessionUser) {
+        return res.status(401).json({ ok: false, error: 'auth', message: 'Войдите в аккаунт.' });
+      }
+
+      var body = req.body && typeof req.body === 'object' ? req.body : {};
+      var rawItems = Array.isArray(body.items) ? body.items : [];
+      var synced = 0;
+
+      for (var i = 0; i < rawItems.length && i < 50; i++) {
+        var row = rawItems[i];
+        if (!row || typeof row !== 'object') {
+          continue;
+        }
+        var itemId = favoriteItemId(row.id || row.item_id);
+        var title = stripAndTruncate(row.title, 400);
+        var href = stripAndTruncate(row.href, 2000);
+        if (!itemId || !title || !href) {
+          continue;
+        }
+        await upsertUserFavorite(db, sessionUser.userId, {
+          id: itemId,
+          title: title,
+          href: href,
+          excerpt: stripAndTruncate(row.excerpt, 600),
+          kind: stripAndTruncate(row.kind, 120) || 'Избранное',
+        });
+        synced += 1;
+      }
+
+      var items = await getUserFavorites(db, sessionUser.userId);
+      return res.json({ ok: true, synced: synced, items: items });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: 'server', message: 'Ошибка синхронизации избранного.' });
     }
   });
 }

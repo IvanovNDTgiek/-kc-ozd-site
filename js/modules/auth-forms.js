@@ -1,4 +1,5 @@
 import { validateDisplayName, validateEmail, validatePassword } from './validation.js';
+import { migrateLocalFavoritesAfterAuth } from './favorites.js';
 
 function apiBase(doc) {
   var el = doc.querySelector('meta[name="api-base"]');
@@ -168,7 +169,9 @@ export function initAuthForms(doc) {
             if (statusEl) {
               statusEl.textContent = 'Регистрация выполнена. Перенаправление…';
             }
-            window.location.href = 'index.html';
+            migrateLocalFavoritesAfterAuth(doc).finally(function () {
+              window.location.href = 'index.html';
+            });
             return;
           }
           showApiError(reg, x.json || {});
@@ -231,7 +234,9 @@ export function initAuthForms(doc) {
             if (statusEl) {
               statusEl.textContent = 'Вход выполнен. Перенаправление…';
             }
-            window.location.href = 'index.html';
+            migrateLocalFavoritesAfterAuth(doc).finally(function () {
+              window.location.href = 'index.html';
+            });
             return;
           }
           showApiError(login, x.json || { message: 'Неверный e-mail или пароль.' });

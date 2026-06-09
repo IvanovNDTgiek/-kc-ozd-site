@@ -1,3 +1,5 @@
+import { clearLocalFavoritesStorage } from './favorites.js';
+
 /**
  * @param {Document} doc
  */
@@ -70,6 +72,7 @@ export function initAuthNav(doc) {
       })
         .catch(function () {})
         .finally(function () {
+          clearLocalFavoritesStorage();
           window.location.reload();
         });
     });

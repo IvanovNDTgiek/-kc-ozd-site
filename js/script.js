@@ -23,7 +23,7 @@ try {
   initSlider(document);
   initSiteSearch(document);
   initFavoritesPage(document);
-  initFavorites(document);
+  initFavorites(document).catch(function () {});
   initContactForm(document);
   initAuthForms(document);
   initAuthNav(document);
